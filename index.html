@@ -1,3 +1,8 @@
+/*
+This is a simple web-based scenario game for Information Security Management (ISM) education.
+It is built with HTML, CSS, and JavaScript and can be hosted on GitHub Pages.
+*/
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,6 +42,11 @@
     .scores {
       margin-top: 2rem;
     }
+    .score-change {
+      font-size: 0.9rem;
+      color: #555;
+      margin-left: 10px;
+    }
     .outcome {
       margin-top: 1rem;
       font-style: italic;
@@ -63,9 +73,9 @@
     <button id="next-btn" onclick="goToNextScenario()">Next Scenario</button>
     <div class="scores">
       <h3>Scores</h3>
-      <p>Budget: <span id="budget">100</span></p>
-      <p>Reputation: <span id="reputation">100</span></p>
-      <p>Security: <span id="security">100</span></p>
+      <p>Budget: <span id="budget">100</span><span class="score-change" id="budget-change"></span></p>
+      <p>Reputation: <span id="reputation">100</span><span class="score-change" id="reputation-change"></span></p>
+      <p>Security: <span id="security">100</span><span class="score-change" id="security-change"></span></p>
     </div>
   </div>
 
@@ -167,7 +177,7 @@
 
     let currentScenario = 0;
 
-    function updateScores(effects, showChanges = false) {
+    function updateScores(effects) {
       const prev = { budget, reputation, security };
 
       budget += effects.budget;
@@ -178,16 +188,9 @@
       document.getElementById("reputation").textContent = reputation;
       document.getElementById("security").textContent = security;
 
-      if (showChanges) {
-        let changes = `\n\nScore changes:`;
-        changes += `\nBudget: ${prev.budget} → ${budget} (${effects.budget >= 0 ? "+" : ""}${effects.budget})`;
-        changes += `\nReputation: ${prev.reputation} → ${reputation} (${effects.reputation >= 0 ? "+" : ""}${effects.reputation})`;
-        changes += `\nSecurity: ${prev.security} → ${security} (${effects.security >= 0 ? "+" : ""}${effects.security})`;
-
-        return changes;
-      }
-
-      return "";
+      document.getElementById("budget-change").textContent = effects.budget !== 0 ? ` (${effects.budget >= 0 ? '+' : ''}${effects.budget})` : '';
+      document.getElementById("reputation-change").textContent = effects.reputation !== 0 ? ` (${effects.reputation >= 0 ? '+' : ''}${effects.reputation})` : '';
+      document.getElementById("security-change").textContent = effects.security !== 0 ? ` (${effects.security >= 0 ? '+' : ''}${effects.security})` : '';
     }
 
     function showScenario(index) {
@@ -210,9 +213,9 @@
         button.textContent = choice.text;
         button.onclick = () => {
           const effects = choice.getEffects();
-          const changes = updateScores(effects, true);
+          updateScores(effects);
           const outcomeText = choice.getOutcome();
-          document.getElementById("outcome-text").textContent = outcomeText + changes;
+          document.getElementById("outcome-text").textContent = outcomeText;
           document.getElementById("choices").innerHTML = "";
           document.getElementById("next-btn").style.display = "block";
         };
@@ -221,6 +224,9 @@
     }
 
     function goToNextScenario() {
+      document.getElementById("budget-change").textContent = "";
+      document.getElementById("reputation-change").textContent = "";
+      document.getElementById("security-change").textContent = "";
       currentScenario++;
       showScenario(currentScenario);
     }
