@@ -137,5 +137,20 @@
 
     updateBars();
   </script>
+
+  <h2>Your Progress</h2>
+<p id="progress-text">Loading progress...</p>
+
+<script>
+  const gameState = JSON.parse(localStorage.getItem("ismGameState"));
+  if (gameState && gameState.completedScenarios) {
+    const completed = gameState.completedScenarios.length;
+    const total = 3; // Or however many scenarios you define
+    document.getElementById("progress-text").textContent = `${completed} of ${total} scenarios completed.`;
+  } else {
+    document.getElementById("progress-text").textContent = "You haven't started the game yet.";
+  }
+</script>
+
 </body>
 </html>
