@@ -50,17 +50,25 @@
       border-radius: 10px;
       background: #ddd;
       overflow: hidden;
+      position: relative;
     }
     .fill {
       height: 100%;
       transition: width 0.3s ease-in-out;
+      color: white;
+      font-weight: bold;
+      padding-left: 5px;
+      line-height: 20px;
+      white-space: nowrap;
     }
     .budget .fill { background: #007bff; }
-    .reputation .fill { background: #ffc107; }
+    .reputation .fill { background: #ffc107; color: black; }
     .security .fill { background: #17a2b8; }
+    .progress .fill { background: #28a745; }
     .commentary {
       font-size: 0.9rem;
       color: #555;
+      margin-top: 4px;
     }
   </style>
 </head>
@@ -92,17 +100,31 @@
         <div class="bar"><div class="fill" id="security-bar"></div></div>
         <div class="commentary" id="security-comment"></div>
       </div>
+
+      <div class="metric progress">
+        <strong>Scenarios Completed:</strong>
+        <div class="bar"><div class="fill" id="progress-bar"></div></div>
+        <div class="commentary" id="progress-comment"></div>
+      </div>
     </div>
+
+    <h3>Your Progress</h3>
+    <p id="progress-text">Loading progress...</p>
   </div>
 
   <script>
+    // Total number of scenarios in your game
+    const TOTAL_SCENARIOS = 3;
+
     function loadGameState() {
       const saved = localStorage.getItem("ismGameState");
       if (saved) return JSON.parse(saved);
+      // Default starting state
       return {
         budget: 100,
         reputation: 100,
-        security: 100
+        security: 100,
+        completedScenarios: []
       };
     }
 
@@ -120,13 +142,24 @@
       const update = (id, value, commentId) => {
         const bar = document.getElementById(id);
         bar.style.width = `${value}%`;
-        bar.textContent = value;
+        // Show the numeric value inside the bar, fallback if too narrow
+        bar.textContent = value >= 15 ? `${value}%` : "";
         document.getElementById(commentId).textContent = getCommentary(value);
       };
 
       update("budget-bar", state.budget, "budget-comment");
       update("reputation-bar", state.reputation, "reputation-comment");
       update("security-bar", state.security, "security-comment");
+
+      // Calculate progress percentage
+      const completedCount = Array.isArray(state.completedScenarios) ? state.completedScenarios.length : 0;
+      const progressPercent = Math.round((completedCount / TOTAL_SCENARIOS) * 100);
+
+      update("progress-bar", progressPercent, "progress-comment");
+
+      // Update textual progress as well
+      const progressText = `${completedCount} of ${TOTAL_SCENARIOS} scenarios completed.`;
+      document.getElementById("progress-text").textContent = completedCount > 0 ? progressText : "You haven't started the game yet.";
     }
 
     function resetGame() {
@@ -137,20 +170,5 @@
 
     updateBars();
   </script>
-
-  <h2>Your Progress</h2>
-<p id="progress-text">Loading progress...</p>
-
-<script>
-  const gameState = JSON.parse(localStorage.getItem("ismGameState"));
-  if (gameState && gameState.completedScenarios) {
-    const completed = gameState.completedScenarios.length;
-    const total = 3; // Or however many scenarios you define
-    document.getElementById("progress-text").textContent = `${completed} of ${total} scenarios completed.`;
-  } else {
-    document.getElementById("progress-text").textContent = "You haven't started the game yet.";
-  }
-</script>
-
 </body>
 </html>
