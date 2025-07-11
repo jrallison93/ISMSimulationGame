@@ -201,9 +201,9 @@
             text: "Pay the ransom to recover data quickly",
             getEffects: () => {
               if (budget < 50) {
-                return { budget: -40, reputation: -10, security: -5 };
+                return { budget: -100, reputation: -10, security: -5 };
               } else {
-                return { budget: -50, reputation: -15, security: -10 };
+                return { budget: -100, reputation: -15, security: -10 };
               }
             },
             getOutcome: () => {
