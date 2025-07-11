@@ -84,7 +84,7 @@
     let reputation = 100;
     let security = 100;
 
-    const scenarios = [
+    let scenarios = [
       {
         text: "Your company is facing increasing phishing attacks. What action do you take?",
         choices: [
@@ -172,10 +172,75 @@
             }
           }
         ]
+      },
+      {
+        text: "Your company has been hit with a ransomware attack. What is your immediate response?",
+        choices: [
+          {
+            text: "Pay the ransom to recover data quickly",
+            getEffects: () => {
+              if (budget < 50) {
+                return { budget: -40, reputation: -10, security: -5 };
+              } else {
+                return { budget: -50, reputation: -15, security: -10 };
+              }
+            },
+            getOutcome: () => {
+              if (budget < 50) {
+                return "Paying the ransom helped restore operations, but emboldened future attacks and damaged your reputation.";
+              } else {
+                return "The ransom was paid swiftly, but stakeholders questioned the long-term implications of negotiating with criminals.";
+              }
+            }
+          },
+          {
+            text: "Restore from backups and report the incident",
+            getEffects: () => {
+              if (security > 80) {
+                return { budget: -10, reputation: +5, security: +10 };
+              } else {
+                return { budget: -20, reputation: 0, security: +5 };
+              }
+            },
+            getOutcome: () => {
+              if (security > 80) {
+                return "Well-prepared with secure backups, recovery was smooth and transparency improved public trust.";
+              } else {
+                return "Restoring took time, but avoiding ransom payment upheld policy and demonstrated some resilience.";
+              }
+            }
+          },
+          {
+            text: "Take systems offline and investigate",
+            getEffects: () => {
+              if (reputation > 80) {
+                return { budget: -15, reputation: -5, security: +10 };
+              } else {
+                return { budget: -15, reputation: -10, security: +15 };
+              }
+            },
+            getOutcome: () => {
+              if (reputation > 80) {
+                return "Taking action showed responsibility, though delays in service caused some customer complaints.";
+              } else {
+                return "The breach was contained and the root cause identified, helping prevent similar future incidents.";
+              }
+            }
+          }
+        ]
       }
     ];
 
-    let currentScenario = 0;
+    let currentScenarioIndex = 0;
+    let scenarioOrder = shuffle([...Array(scenarios.length).keys()]);
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
 
     function updateScores(effects) {
       const updateDisplay = (id, change) => {
@@ -203,7 +268,7 @@
     }
 
     function showScenario(index) {
-      const scenario = scenarios[index];
+      const scenario = scenarios[scenarioOrder[index]];
       document.getElementById("outcome-text").textContent = "";
       document.getElementById("next-btn").style.display = "none";
 
@@ -239,11 +304,11 @@
       document.getElementById("budget-change").className = "score-change";
       document.getElementById("reputation-change").className = "score-change";
       document.getElementById("security-change").className = "score-change";
-      currentScenario++;
-      showScenario(currentScenario);
+      currentScenarioIndex++;
+      showScenario(currentScenarioIndex);
     }
 
-    showScenario(currentScenario);
+    showScenario(currentScenarioIndex);
   </script>
 </body>
 </html>
