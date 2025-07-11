@@ -63,6 +63,17 @@
       border-radius: 5px;
       cursor: pointer;
     }
+    #restart-btn {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.8rem;
+      border: none;
+      background: #dc3545;
+      color: white;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -71,6 +82,7 @@
     <div class="choices" id="choices"></div>
     <div class="outcome" id="outcome-text"></div>
     <button id="next-btn" onclick="goToNextScenario()">Next Scenario</button>
+    <button id="restart-btn" onclick="restartGame()">Restart Game</button>
     <div class="scores">
       <h3>Scores</h3>
       <p>Budget: <span id="budget">100</span><span class="score-change" id="budget-change"></span></p>
@@ -80,9 +92,18 @@
   </div>
 
   <script>
-    let budget = 100;
-    let reputation = 100;
-    let security = 100;
+    let budget, reputation, security;
+    let currentScenarioIndex, scenarioOrder;
+
+    function initialiseGame() {
+      budget = 100;
+      reputation = 100;
+      security = 100;
+      currentScenarioIndex = 0;
+      scenarioOrder = shuffle([...Array(scenarios.length).keys()]);
+      document.getElementById("restart-btn").style.display = "none";
+      showScenario(currentScenarioIndex);
+    }
 
     let scenarios = [
       {
@@ -231,9 +252,6 @@
       }
     ];
 
-    let currentScenarioIndex = 0;
-    let scenarioOrder = shuffle([...Array(scenarios.length).keys()]);
-
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -275,6 +293,7 @@
       if (!scenario) {
         document.getElementById("scenario-text").textContent = "Game complete! Thanks for playing.";
         document.getElementById("choices").innerHTML = "";
+        document.getElementById("restart-btn").style.display = "block";
         return;
       }
 
@@ -308,7 +327,11 @@
       showScenario(currentScenarioIndex);
     }
 
-    showScenario(currentScenarioIndex);
+    function restartGame() {
+      initialiseGame();
+    }
+
+    initialiseGame();
   </script>
 </body>
 </html>
