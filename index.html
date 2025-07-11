@@ -93,30 +93,34 @@
 
   <script>
     let budget, reputation, security;
-    let currentScenarioIndex, scenarioOrder;
+    let currentScenarioIndex, scenarioOrder, completedScenarios;
 
     function loadGameState() {
-      const saved = JSON.parse(localStorage.getItem("ismGameState"));
-      if (saved) {
-        ({ budget, reputation, security, currentScenarioIndex, scenarioOrder } = saved);
-      } else {
-        budget = 100;
-        reputation = 100;
-        security = 100;
-        currentScenarioIndex = 0;
-        scenarioOrder = shuffle([...Array(scenarios.length).keys()]);
-      }
-    }
+  const saved = JSON.parse(localStorage.getItem("ismGameState"));
+  if (saved) {
+    ({ budget, reputation, security, currentScenarioIndex, scenarioOrder, completedScenarios } = saved);
+  } else {
+    budget = 100;
+    reputation = 100;
+    security = 100;
+    currentScenarioIndex = 0;
+    scenarioOrder = shuffle([...Array(scenarios.length).keys()]);
+    completedScenarios = [];
+  }
+}
+
 
     function saveGameState() {
-      localStorage.setItem("ismGameState", JSON.stringify({
-        budget,
-        reputation,
-        security,
-        currentScenarioIndex,
-        scenarioOrder
-      }));
-    }
+  localStorage.setItem("ismGameState", JSON.stringify({
+    budget,
+    reputation,
+    security,
+    currentScenarioIndex,
+    scenarioOrder,
+    completedScenarios
+  }));
+}
+
 
     function initialiseGame() {
       loadGameState();
@@ -258,37 +262,51 @@
     }
 
     function showScenario(index) {
-      if (budget === 0) return;
-      const scenario = scenarios[scenarioOrder[index]];
-      document.getElementById("outcome-text").textContent = "";
-      document.getElementById("next-btn").style.display = "none";
+  if (budget === 0) return;
 
-      if (!scenario) {
-        document.getElementById("scenario-text").textContent = "Game complete! Thanks for playing.";
-        document.getElementById("choices").innerHTML = "";
-        document.getElementById("restart-btn").style.display = "block";
-        return;
+  // Skip any already completed scenarios
+  while (index < scenarioOrder.length && completedScenarios.includes(scenarioOrder[index])) {
+    index++;
+    currentScenarioIndex = index;
+  }
+
+  const scenario = scenarios[scenarioOrder[index]];
+  if (!scenario) {
+    document.getElementById("scenario-text").textContent = "Game complete! Thanks for playing.";
+    document.getElementById("choices").innerHTML = "";
+    document.getElementById("restart-btn").style.display = "block";
+    return;
+  }
+
+  document.getElementById("outcome-text").textContent = "";
+  document.getElementById("next-btn").style.display = "none";
+  document.getElementById("scenario-text").textContent = scenario.text;
+  const choicesDiv = document.getElementById("choices");
+  choicesDiv.innerHTML = "";
+
+  scenario.choices.forEach((choice) => {
+    const button = document.createElement("button");
+    button.textContent = choice.text;
+    button.onclick = () => {
+      const effects = choice.getEffects();
+      updateScores(effects);
+      if (budget === 0) return;
+
+      const scenarioIndex = scenarioOrder[currentScenarioIndex];
+      if (!completedScenarios.includes(scenarioIndex)) {
+        completedScenarios.push(scenarioIndex);
+        saveGameState();
       }
 
-      document.getElementById("scenario-text").textContent = scenario.text;
-      const choicesDiv = document.getElementById("choices");
-      choicesDiv.innerHTML = "";
+      const outcomeText = choice.getOutcome();
+      document.getElementById("choices").innerHTML = "";
+      document.getElementById("outcome-text").innerHTML = `<strong>You chose:</strong> ${choice.text}<br><br>${outcomeText}`;
+      document.getElementById("next-btn").style.display = "block";
+    };
+    choicesDiv.appendChild(button);
+  });
+}
 
-      scenario.choices.forEach((choice) => {
-        const button = document.createElement("button");
-        button.textContent = choice.text;
-        button.onclick = () => {
-          const effects = choice.getEffects();
-          updateScores(effects);
-          if (budget === 0) return;
-          const outcomeText = choice.getOutcome();
-          document.getElementById("choices").innerHTML = "";
-          document.getElementById("outcome-text").innerHTML = `<strong>You chose:</strong> ${choice.text}<br><br>${outcomeText}`;
-          document.getElementById("next-btn").style.display = "block";
-        };
-        choicesDiv.appendChild(button);
-      });
-    }
 
     function goToNextScenario() {
       document.getElementById("budget-change").textContent = "";
