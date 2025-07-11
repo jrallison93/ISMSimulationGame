@@ -92,42 +92,6 @@
   </div>
 
   <script>
-    let budget, reputation, security;
-    let currentScenarioIndex, scenarioOrder, completedScenarios;
-
-    function loadGameState() {
-  const saved = JSON.parse(localStorage.getItem("ismGameState"));
-  if (saved) {
-    ({ budget, reputation, security, currentScenarioIndex, scenarioOrder, completedScenarios } = saved);
-  } else {
-    budget = 100;
-    reputation = 100;
-    security = 100;
-    currentScenarioIndex = 0;
-    scenarioOrder = shuffle([...Array(scenarios.length).keys()]);
-    completedScenarios = [];
-  }
-}
-
-
-    function saveGameState() {
-  localStorage.setItem("ismGameState", JSON.stringify({
-    budget,
-    reputation,
-    security,
-    currentScenarioIndex,
-    scenarioOrder,
-    completedScenarios
-  }));
-}
-
-
-    function initialiseGame() {
-      loadGameState();
-      document.getElementById("restart-btn").style.display = "none";
-      showScenario(currentScenarioIndex);
-      updateScoreDisplay();
-    }
 
     const scenarios = [
       {
@@ -219,6 +183,43 @@
         ]
       }
     ];
+    
+    let budget, reputation, security;
+    let currentScenarioIndex, scenarioOrder, completedScenarios;
+
+    function loadGameState() {
+  const saved = JSON.parse(localStorage.getItem("ismGameState"));
+  if (saved) {
+    ({ budget, reputation, security, currentScenarioIndex, scenarioOrder, completedScenarios } = saved);
+  } else {
+    budget = 100;
+    reputation = 100;
+    security = 100;
+    currentScenarioIndex = 0;
+    scenarioOrder = shuffle([...Array(scenarios.length).keys()]);
+    completedScenarios = [];
+  }
+}
+
+
+    function saveGameState() {
+  localStorage.setItem("ismGameState", JSON.stringify({
+    budget,
+    reputation,
+    security,
+    currentScenarioIndex,
+    scenarioOrder,
+    completedScenarios
+  }));
+}
+
+
+    function initialiseGame() {
+      loadGameState();
+      document.getElementById("restart-btn").style.display = "none";
+      showScenario(currentScenarioIndex);
+      updateScoreDisplay();
+    }
 
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
