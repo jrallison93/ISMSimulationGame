@@ -121,10 +121,11 @@
     }
 
     function getCommentary(score) {
-      if (score >= 160) return "Excellent performance in this area.";
+      if (score >= 150) return "Excellent performance in this area.";
       if (score >= 120) return "Above average, keep it up.";
-      if (score >= 80) return "Needs improvement.";
-      if (score >= 40) return "Critical condition.";
+      if (score >= 85) return "Average performance.";
+      if (score >= 35) return "Needs improvement.";
+      if (score >= 10) return "Critical condition.";
       return "Failing — take immediate action!";
     }
 
