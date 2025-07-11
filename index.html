@@ -272,9 +272,11 @@
         }
       };
 
-      budget += effects.budget;
-      reputation += effects.reputation;
-      security += effects.security;
+      const clamp = (value) => Math.max(0, value);
+
+      budget = clamp(budget + effects.budget);
+      reputation = clamp(reputation + effects.reputation);
+      security = clamp(security + effects.security);
 
       document.getElementById("budget").textContent = budget;
       document.getElementById("reputation").textContent = reputation;
@@ -283,9 +285,14 @@
       updateDisplay("budget-change", effects.budget);
       updateDisplay("reputation-change", effects.reputation);
       updateDisplay("security-change", effects.security);
+
+      if (budget === 0) {
+        endGame("Bankruptcy! Your company has run out of budget and cannot continue operations.");
+      }
     }
 
     function showScenario(index) {
+      if (budget === 0) return;
       const scenario = scenarios[scenarioOrder[index]];
       document.getElementById("outcome-text").textContent = "";
       document.getElementById("next-btn").style.display = "none";
@@ -307,6 +314,7 @@
         button.onclick = () => {
           const effects = choice.getEffects();
           updateScores(effects);
+          if (budget === 0) return;
           const outcomeText = choice.getOutcome();
           document.getElementById("choices").innerHTML = "";
           document.getElementById("outcome-text").innerHTML = `<strong>You chose:</strong> ${choice.text}<br><br>${outcomeText}`;
@@ -325,6 +333,14 @@
       document.getElementById("security-change").className = "score-change";
       currentScenarioIndex++;
       showScenario(currentScenarioIndex);
+    }
+
+    function endGame(message) {
+      document.getElementById("scenario-text").innerHTML = `<strong>Game Over:</strong> ${message}`;
+      document.getElementById("choices").innerHTML = "";
+      document.getElementById("outcome-text").textContent = "";
+      document.getElementById("next-btn").style.display = "none";
+      document.getElementById("restart-btn").style.display = "block";
     }
 
     function restartGame() {
