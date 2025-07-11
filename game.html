@@ -295,11 +295,15 @@
 
       const scenario = scenarios[scenarioOrder[index]];
       if (!scenario) {
-        document.getElementById("scenario-text").textContent = "Game complete! Thanks for playing.";
-        document.getElementById("choices").innerHTML = "";
-        document.getElementById("restart-btn").style.display = "block";
-        return;
+        localStorage.setItem("finalScores", JSON.stringify({
+          budget,
+          reputation,
+          security
+      }));
+      window.location.href = "end.html";
+      return;
       }
+
 
       document.getElementById("outcome-text").textContent = "";
       document.getElementById("next-btn").style.display = "none";
