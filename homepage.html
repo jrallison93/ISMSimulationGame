@@ -50,6 +50,7 @@
       border-radius: 10px;
       background: #ddd;
       overflow: hidden;
+      position: relative;
     }
     .fill {
       height: 100%;
@@ -59,6 +60,7 @@
       text-align: right;
       padding-right: 5px;
       box-sizing: border-box;
+      white-space: nowrap;
     }
     .budget .fill { background: #007bff; }
     .reputation .fill { background: #ffc107; color: black; }
@@ -105,6 +107,7 @@
 
   <script>
     const TOTAL_SCENARIOS = 3;
+    const MAX_VALUE = 200; // Maximum value for the bars
 
     function loadGameState() {
       const saved = localStorage.getItem("ismGameState");
@@ -118,10 +121,10 @@
     }
 
     function getCommentary(score) {
-      if (score >= 80) return "Excellent performance in this area.";
-      if (score >= 60) return "Above average, keep it up.";
-      if (score >= 40) return "Needs improvement.";
-      if (score >= 20) return "Critical condition.";
+      if (score >= 160) return "Excellent performance in this area.";
+      if (score >= 120) return "Above average, keep it up.";
+      if (score >= 80) return "Needs improvement.";
+      if (score >= 40) return "Critical condition.";
       return "Failing — take immediate action!";
     }
 
@@ -130,8 +133,10 @@
 
       const update = (id, value, commentId) => {
         const bar = document.getElementById(id);
-        bar.style.width = `${value}%`;
-        bar.textContent = value >= 15 ? `${value}%` : "";
+        // Calculate width percentage relative to MAX_VALUE
+        const widthPercent = Math.min((value / MAX_VALUE) * 100, 100);
+        bar.style.width = `${widthPercent}%`;
+        bar.textContent = value;
         document.getElementById(commentId).textContent = getCommentary(value);
       };
 
