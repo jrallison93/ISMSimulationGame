@@ -1,8 +1,3 @@
-/*
-This is a simple web-based scenario game for Information Security Management (ISM) education.
-It is built with HTML, CSS, and JavaScript and can be hosted on GitHub Pages.
-*/
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,8 +39,13 @@ It is built with HTML, CSS, and JavaScript and can be hosted on GitHub Pages.
     }
     .score-change {
       font-size: 0.9rem;
-      color: #555;
       margin-left: 10px;
+    }
+    .score-change.positive {
+      color: green;
+    }
+    .score-change.negative {
+      color: red;
     }
     .outcome {
       margin-top: 1rem;
@@ -178,7 +178,16 @@ It is built with HTML, CSS, and JavaScript and can be hosted on GitHub Pages.
     let currentScenario = 0;
 
     function updateScores(effects) {
-      const prev = { budget, reputation, security };
+      const updateDisplay = (id, change) => {
+        const element = document.getElementById(id);
+        element.textContent = change !== 0 ? ` (${change >= 0 ? '+' : ''}${change})` : '';
+        element.className = 'score-change';
+        if (change > 0) {
+          element.classList.add('positive');
+        } else if (change < 0) {
+          element.classList.add('negative');
+        }
+      };
 
       budget += effects.budget;
       reputation += effects.reputation;
@@ -188,9 +197,9 @@ It is built with HTML, CSS, and JavaScript and can be hosted on GitHub Pages.
       document.getElementById("reputation").textContent = reputation;
       document.getElementById("security").textContent = security;
 
-      document.getElementById("budget-change").textContent = effects.budget !== 0 ? ` (${effects.budget >= 0 ? '+' : ''}${effects.budget})` : '';
-      document.getElementById("reputation-change").textContent = effects.reputation !== 0 ? ` (${effects.reputation >= 0 ? '+' : ''}${effects.reputation})` : '';
-      document.getElementById("security-change").textContent = effects.security !== 0 ? ` (${effects.security >= 0 ? '+' : ''}${effects.security})` : '';
+      updateDisplay("budget-change", effects.budget);
+      updateDisplay("reputation-change", effects.reputation);
+      updateDisplay("security-change", effects.security);
     }
 
     function showScenario(index) {
@@ -215,8 +224,8 @@ It is built with HTML, CSS, and JavaScript and can be hosted on GitHub Pages.
           const effects = choice.getEffects();
           updateScores(effects);
           const outcomeText = choice.getOutcome();
-          document.getElementById("outcome-text").textContent = outcomeText;
           document.getElementById("choices").innerHTML = "";
+          document.getElementById("outcome-text").innerHTML = `<strong>You chose:</strong> ${choice.text}<br><br>${outcomeText}`;
           document.getElementById("next-btn").style.display = "block";
         };
         choicesDiv.appendChild(button);
@@ -227,6 +236,9 @@ It is built with HTML, CSS, and JavaScript and can be hosted on GitHub Pages.
       document.getElementById("budget-change").textContent = "";
       document.getElementById("reputation-change").textContent = "";
       document.getElementById("security-change").textContent = "";
+      document.getElementById("budget-change").className = "score-change";
+      document.getElementById("reputation-change").className = "score-change";
+      document.getElementById("security-change").className = "score-change";
       currentScenario++;
       showScenario(currentScenario);
     }
