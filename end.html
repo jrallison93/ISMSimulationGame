@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Game Complete</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f8f9fa;
+      text-align: center;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      margin-bottom: 1rem;
+    }
+    .score {
+      font-size: 1.2rem;
+      margin: 0.5rem 0;
+    }
+    button {
+      margin-top: 2rem;
+      padding: 0.8rem 1.2rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Congratulations!</h1>
+    <p>You’ve completed all the scenarios.</p>
+
+    <div class="score" id="budget-score">Budget: </div>
+    <div class="score" id="reputation-score">Reputation: </div>
+    <div class="score" id="security-score">Security: </div>
+
+    <button onclick="window.location.href='index.html'">Play Again</button>
+  </div>
+
+  <script>
+    const finalScores = JSON.parse(localStorage.getItem("finalScores")) || {
+      budget: 0,
+      reputation: 0,
+      security: 0
+    };
+
+    document.getElementById("budget-score").textContent = "Budget: " + finalScores.budget;
+    document.getElementById("reputation-score").textContent = "Reputation: " + finalScores.reputation;
+    document.getElementById("security-score").textContent = "Security: " + finalScores.security;
+  </script>
+</body>
+</html>
