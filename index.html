@@ -37,12 +37,30 @@
     .scores {
       margin-top: 2rem;
     }
+    .outcome {
+      margin-top: 1rem;
+      font-style: italic;
+      color: #333;
+    }
+    #next-btn {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.8rem;
+      border: none;
+      background: #28a745;
+      color: white;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="scenario" id="scenario-text"></div>
     <div class="choices" id="choices"></div>
+    <div class="outcome" id="outcome-text"></div>
+    <button id="next-btn" onclick="goToNextScenario()">Next Scenario</button>
     <div class="scores">
       <h3>Scores</h3>
       <p>Budget: <span id="budget">100</span></p>
@@ -52,21 +70,64 @@
   </div>
 
   <script>
+    let budget = 100;
+    let reputation = 100;
+    let security = 100;
+
     const scenarios = [
       {
         text: "Your company is facing increasing phishing attacks. What action do you take?",
         choices: [
           {
             text: "Invest in phishing simulation training",
-            effects: { budget: -10, reputation: +5, security: +15 }
+            getEffects: () => {
+              if (security < 60) {
+                return { budget: -10, reputation: +10, security: +20 };
+              } else {
+                return { budget: -5, reputation: +2, security: +5 };
+              }
+            },
+            getOutcome: () => {
+              if (security < 60) {
+                return "Training greatly improved employee awareness and reduced attack success rates.";
+              } else {
+                return "While already quite secure, training maintained vigilance and had a small benefit.";
+              }
+            }
           },
           {
             text: "Ignore for now and monitor",
-            effects: { budget: 0, reputation: -10, security: -20 }
+            getEffects: () => {
+              if (security < 50) {
+                return { budget: 0, reputation: -20, security: -30 };
+              } else {
+                return { budget: 0, reputation: -5, security: -10 };
+              }
+            },
+            getOutcome: () => {
+              if (security < 50) {
+                return "Ignoring the issue led to a serious breach, damaging your company's credibility.";
+              } else {
+                return "Nothing major happened yet, but stakeholders are beginning to question your inaction.";
+              }
+            }
           },
           {
             text: "Hire an external consultant",
-            effects: { budget: -25, reputation: +10, security: +10 }
+            getEffects: () => {
+              if (budget < 30) {
+                return { budget: -25, reputation: +5, security: +5 };
+              } else {
+                return { budget: -25, reputation: +10, security: +15 };
+              }
+            },
+            getOutcome: () => {
+              if (budget < 30) {
+                return "The consultant was helpful, but the expense strained other departments.";
+              } else {
+                return "The consultant improved defences and reassured your board of directors.";
+              }
+            }
           }
         ]
       },
@@ -75,25 +136,36 @@
         choices: [
           {
             text: "Ban BYOD entirely",
-            effects: { budget: 0, reputation: -5, security: +20 }
+            getEffects: () => ({ budget: 0, reputation: -5, security: +20 }),
+            getOutcome: () => "Security improved with strict control, but staff morale dipped due to inflexible policy."
           },
           {
             text: "Allow with minimal monitoring",
-            effects: { budget: -5, reputation: +5, security: -10 }
+            getEffects: () => ({ budget: -5, reputation: +5, security: -10 }),
+            getOutcome: () => "People liked the freedom, but vulnerabilities increased due to lax oversight."
           },
           {
             text: "Implement a managed BYOD policy with MDM software",
-            effects: { budget: -15, reputation: +5, security: +10 }
+            getEffects: () => {
+              if (budget > 70) {
+                return { budget: -15, reputation: +10, security: +15 };
+              } else {
+                return { budget: -15, reputation: +5, security: +10 };
+              }
+            },
+            getOutcome: () => {
+              if (budget > 70) {
+                return "Managed BYOD was fully funded and led to a very successful implementation.";
+              } else {
+                return "Balanced approach improved oversight and kept users happy, though it came with setup costs.";
+              }
+            }
           }
         ]
       }
-      // Add more scenarios as needed
     ];
 
     let currentScenario = 0;
-    let budget = 100;
-    let reputation = 100;
-    let security = 100;
 
     function updateScores(effects) {
       budget += effects.budget;
@@ -106,6 +178,9 @@
 
     function showScenario(index) {
       const scenario = scenarios[index];
+      document.getElementById("outcome-text").textContent = "";
+      document.getElementById("next-btn").style.display = "none";
+
       if (!scenario) {
         document.getElementById("scenario-text").textContent = "Game complete! Thanks for playing.";
         document.getElementById("choices").innerHTML = "";
@@ -116,16 +191,24 @@
       const choicesDiv = document.getElementById("choices");
       choicesDiv.innerHTML = "";
 
-      scenario.choices.forEach((choice, i) => {
+      scenario.choices.forEach((choice) => {
         const button = document.createElement("button");
         button.textContent = choice.text;
         button.onclick = () => {
-          updateScores(choice.effects);
-          currentScenario++;
-          showScenario(currentScenario);
+          const effects = choice.getEffects();
+          updateScores(effects);
+          const outcomeText = choice.getOutcome();
+          document.getElementById("outcome-text").textContent = outcomeText;
+          document.getElementById("choices").innerHTML = "";
+          document.getElementById("next-btn").style.display = "block";
         };
         choicesDiv.appendChild(button);
       });
+    }
+
+    function goToNextScenario() {
+      currentScenario++;
+      showScenario(currentScenario);
     }
 
     showScenario(currentScenario);
