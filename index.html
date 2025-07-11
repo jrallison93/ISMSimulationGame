@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ISM Scenario Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background-color: #f4f4f4;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .scenario {
+      margin-bottom: 1.5rem;
+    }
+    .choices button {
+      display: block;
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      border: none;
+      background: #007BFF;
+      color: white;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .scores {
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="scenario" id="scenario-text"></div>
+    <div class="choices" id="choices"></div>
+    <div class="scores">
+      <h3>Scores</h3>
+      <p>Budget: <span id="budget">100</span></p>
+      <p>Reputation: <span id="reputation">100</span></p>
+      <p>Security: <span id="security">100</span></p>
+    </div>
+  </div>
+
+  <script>
+    const scenarios = [
+      {
+        text: "Your company is facing increasing phishing attacks. What action do you take?",
+        choices: [
+          {
+            text: "Invest in phishing simulation training",
+            effects: { budget: -10, reputation: +5, security: +15 }
+          },
+          {
+            text: "Ignore for now and monitor",
+            effects: { budget: 0, reputation: -10, security: -20 }
+          },
+          {
+            text: "Hire an external consultant",
+            effects: { budget: -25, reputation: +10, security: +10 }
+          }
+        ]
+      },
+      {
+        text: "You must decide on a policy for personal devices at work (BYOD). What do you choose?",
+        choices: [
+          {
+            text: "Ban BYOD entirely",
+            effects: { budget: 0, reputation: -5, security: +20 }
+          },
+          {
+            text: "Allow with minimal monitoring",
+            effects: { budget: -5, reputation: +5, security: -10 }
+          },
+          {
+            text: "Implement a managed BYOD policy with MDM software",
+            effects: { budget: -15, reputation: +5, security: +10 }
+          }
+        ]
+      }
+      // Add more scenarios as needed
+    ];
+
+    let currentScenario = 0;
+    let budget = 100;
+    let reputation = 100;
+    let security = 100;
+
+    function updateScores(effects) {
+      budget += effects.budget;
+      reputation += effects.reputation;
+      security += effects.security;
+      document.getElementById("budget").textContent = budget;
+      document.getElementById("reputation").textContent = reputation;
+      document.getElementById("security").textContent = security;
+    }
+
+    function showScenario(index) {
+      const scenario = scenarios[index];
+      if (!scenario) {
+        document.getElementById("scenario-text").textContent = "Game complete! Thanks for playing.";
+        document.getElementById("choices").innerHTML = "";
+        return;
+      }
+
+      document.getElementById("scenario-text").textContent = scenario.text;
+      const choicesDiv = document.getElementById("choices");
+      choicesDiv.innerHTML = "";
+
+      scenario.choices.forEach((choice, i) => {
+        const button = document.createElement("button");
+        button.textContent = choice.text;
+        button.onclick = () => {
+          updateScores(choice.effects);
+          currentScenario++;
+          showScenario(currentScenario);
+        };
+        choicesDiv.appendChild(button);
+      });
+    }
+
+    showScenario(currentScenario);
+  </script>
+</body>
+</html>
