@@ -92,37 +92,24 @@
   </div>
 
   <script>
-
     const scenarios = [
       {
         text: "Your company is facing increasing phishing attacks. What action do you take?",
         choices: [
           {
             text: "Invest in phishing simulation training",
-            getEffects: () => security < 60
-              ? { budget: -10, reputation: +10, security: +20 }
-              : { budget: -5, reputation: +2, security: +5 },
-            getOutcome: () => security < 60
-              ? "Training greatly improved employee awareness and reduced attack success rates."
-              : "While already quite secure, training maintained vigilance and had a small benefit."
+            getEffects: () => security < 60 ? { budget: -10, reputation: +10, security: +20 } : { budget: -5, reputation: +2, security: +5 },
+            getOutcome: () => security < 60 ? "Training greatly improved employee awareness and reduced attack success rates." : "While already quite secure, training maintained vigilance and had a small benefit."
           },
           {
             text: "Ignore for now and monitor",
-            getEffects: () => security < 50
-              ? { budget: 0, reputation: -20, security: -30 }
-              : { budget: 0, reputation: -5, security: -10 },
-            getOutcome: () => security < 50
-              ? "Ignoring the issue led to a serious breach, damaging your company's credibility."
-              : "Nothing major happened yet, but stakeholders are beginning to question your inaction."
+            getEffects: () => security < 50 ? { budget: 0, reputation: -20, security: -30 } : { budget: 0, reputation: -5, security: -10 },
+            getOutcome: () => security < 50 ? "Ignoring the issue led to a serious breach, damaging your company's credibility." : "Nothing major happened yet, but stakeholders are beginning to question your inaction."
           },
           {
             text: "Hire an external consultant",
-            getEffects: () => budget < 30
-              ? { budget: -25, reputation: +5, security: +5 }
-              : { budget: -25, reputation: +10, security: +15 },
-            getOutcome: () => budget < 30
-              ? "The consultant was helpful, but the expense strained other departments."
-              : "The consultant improved defences and reassured your board of directors."
+            getEffects: () => budget < 30 ? { budget: -25, reputation: +5, security: +5 } : { budget: -25, reputation: +10, security: +15 },
+            getOutcome: () => budget < 30 ? "The consultant was helpful, but the expense strained other departments." : "The consultant improved defences and reassured your board of directors."
           }
         ]
       },
@@ -141,12 +128,8 @@
           },
           {
             text: "Implement a managed BYOD policy with MDM software",
-            getEffects: () => budget > 70
-              ? { budget: -15, reputation: +10, security: +15 }
-              : { budget: -15, reputation: +5, security: +10 },
-            getOutcome: () => budget > 70
-              ? "Managed BYOD was fully funded and led to a very successful implementation."
-              : "Balanced approach improved oversight and kept users happy, though it came with setup costs."
+            getEffects: () => budget > 70 ? { budget: -15, reputation: +10, security: +15 } : { budget: -15, reputation: +5, security: +10 },
+            getOutcome: () => budget > 70 ? "Managed BYOD was fully funded and led to a very successful implementation." : "Balanced approach improved oversight and kept users happy, though it came with setup costs."
           }
         ]
       },
@@ -155,64 +138,105 @@
         choices: [
           {
             text: "Pay the ransom to recover data quickly",
-            getEffects: () => budget < 50
-              ? { budget: -100, reputation: -10, security: -5 }
-              : { budget: -100, reputation: -15, security: -10 },
-            getOutcome: () => budget < 50
-              ? "Paying the ransom helped restore operations, but emboldened future attacks and damaged your reputation."
-              : "The ransom was paid swiftly, but stakeholders questioned the long-term implications of negotiating with criminals."
+            getEffects: () => budget < 50 ? { budget: -100, reputation: -10, security: -5 } : { budget: -100, reputation: -15, security: -10 },
+            getOutcome: () => budget < 50 ? "Paying the ransom helped restore operations, but emboldened future attacks and damaged your reputation." : "The ransom was paid swiftly, but stakeholders questioned the long-term implications of negotiating with criminals."
           },
           {
             text: "Restore from backups and report the incident",
-            getEffects: () => security > 80
-              ? { budget: -10, reputation: +5, security: +10 }
-              : { budget: -20, reputation: 0, security: +5 },
-            getOutcome: () => security > 80
-              ? "Well-prepared with secure backups, recovery was smooth and transparency improved public trust."
-              : "Restoring took time, but avoiding ransom payment upheld policy and demonstrated some resilience."
+            getEffects: () => security > 80 ? { budget: -10, reputation: +5, security: +10 } : { budget: -20, reputation: 0, security: +5 },
+            getOutcome: () => security > 80 ? "Well-prepared with secure backups, recovery was smooth and transparency improved public trust." : "Restoring took time, but avoiding ransom payment upheld policy and demonstrated some resilience."
           },
           {
             text: "Take systems offline and investigate",
-            getEffects: () => reputation > 80
-              ? { budget: -15, reputation: -5, security: +10 }
-              : { budget: -15, reputation: -10, security: +15 },
-            getOutcome: () => reputation > 80
-              ? "Taking action showed responsibility, though delays in service caused some customer complaints."
-              : "The breach was contained and the root cause identified, helping prevent similar future incidents."
+            getEffects: () => reputation > 80 ? { budget: -15, reputation: -5, security: +10 } : { budget: -15, reputation: -10, security: +15 },
+            getOutcome: () => reputation > 80 ? "Taking action showed responsibility, though delays in service caused some customer complaints." : "The breach was contained and the root cause identified, helping prevent similar future incidents."
+          }
+        ]
+      },
+      {
+        text: "A major event is approaching and drones will be used for surveillance. How do you secure the system?",
+        choices: [
+          {
+            text: "Use encrypted live feeds and AI anomaly detection",
+            getEffects: () => ({ budget: -20, reputation: +10, security: +25 }),
+            getOutcome: () => "The encrypted feeds prevented spoofing and the AI flagged a suspicious drone during the event, avoiding a major incident."
+          },
+          {
+            text: "Rely on manual monitoring",
+            getEffects: () => ({ budget: -5, reputation: 0, security: -10 }),
+            getOutcome: () => "A visual monitoring lapse led to delayed response to a suspicious drone, causing public concern."
+          },
+          {
+            text: "Cancel drone usage altogether",
+            getEffects: () => ({ budget: 0, reputation: -10, security: +10 }),
+            getOutcome: () => "Cancelling drone use ensured security, but was criticised as overly cautious and hindered situational awareness."
+          }
+        ]
+      },
+      {
+        text: "You're considering cyber insurance. What do you decide?",
+        choices: [
+          {
+            text: "Invest in comprehensive cyber insurance",
+            getEffects: () => ({ budget: -25, reputation: +5, security: 0 }),
+            getOutcome: () => "Comprehensive coverage gives you peace of mind and boosts board confidence in your resilience planning."
+          },
+          {
+            text: "Opt for minimal coverage",
+            getEffects: () => ({ budget: -10, reputation: 0, security: 0 }),
+            getOutcome: () => "Basic policy reduces financial risk slightly, but you're still vulnerable to heavy incident losses."
+          },
+          {
+            text: "Avoid insurance; focus on defences",
+            getEffects: () => ({ budget: 0, reputation: +2, security: +5 }),
+            getOutcome: () => "You reinforce technical security, but may face scrutiny if an incident exposes financial gaps."
+          }
+        ]
+      },
+      {
+        text: "Executives are hesitant about cybersecurity investments. What do you do?",
+        choices: [
+          {
+            text: "Conduct a simulated breach for execs",
+            getEffects: () => ({ budget: -10, reputation: +15, security: +10 }),
+            getOutcome: () => "The simulation had a profound impact, increasing executive buy-in and leading to new funding."
+          },
+          {
+            text: "Mandate annual executive cyber training",
+            getEffects: () => ({ budget: -5, reputation: +5, security: +5 }),
+            getOutcome: () => "Regular training sessions slowly improve their understanding and support."
+          },
+          {
+            text: "Do nothing for now",
+            getEffects: () => ({ budget: 0, reputation: -10, security: -10 }),
+            getOutcome: () => "Lack of engagement results in poor decisions and missed opportunities to improve posture."
           }
         ]
       }
     ];
-    
+
     let budget, reputation, security;
     let currentScenarioIndex, scenarioOrder, completedScenarios;
 
     function loadGameState() {
-  const saved = JSON.parse(localStorage.getItem("ismGameState"));
-  if (saved) {
-    ({ budget, reputation, security, currentScenarioIndex, scenarioOrder, completedScenarios } = saved);
-  } else {
-    budget = 100;
-    reputation = 100;
-    security = 100;
-    currentScenarioIndex = 0;
-    scenarioOrder = shuffle([...Array(scenarios.length).keys()]);
-    completedScenarios = [];
-  }
-}
-
+      const saved = JSON.parse(localStorage.getItem("ismGameState"));
+      if (saved) {
+        ({ budget, reputation, security, currentScenarioIndex, scenarioOrder, completedScenarios } = saved);
+      } else {
+        budget = 100;
+        reputation = 100;
+        security = 100;
+        currentScenarioIndex = 0;
+        scenarioOrder = shuffle([...Array(scenarios.length).keys()]);
+        completedScenarios = [];
+      }
+    }
 
     function saveGameState() {
-  localStorage.setItem("ismGameState", JSON.stringify({
-    budget,
-    reputation,
-    security,
-    currentScenarioIndex,
-    scenarioOrder,
-    completedScenarios
-  }));
-}
-
+      localStorage.setItem("ismGameState", JSON.stringify({
+        budget, reputation, security, currentScenarioIndex, scenarioOrder, completedScenarios
+      }));
+    }
 
     function initialiseGame() {
       loadGameState();
@@ -230,8 +254,7 @@
     }
 
     function updateScores(effects) {
-      const clamp = (value) => Math.max(0, value);
-
+      const clamp = (val) => Math.max(0, val);
       const updateDisplay = (id, change) => {
         const element = document.getElementById(id);
         element.textContent = change !== 0 ? ` (${change >= 0 ? '+' : ''}${change})` : '';
@@ -263,59 +286,56 @@
     }
 
     function showScenario(index) {
-  if (budget === 0) return;
-
-  // Skip any already completed scenarios
-  while (index < scenarioOrder.length && completedScenarios.includes(scenarioOrder[index])) {
-    index++;
-    currentScenarioIndex = index;
-  }
-
-  const scenario = scenarios[scenarioOrder[index]];
-  if (!scenario) {
-    document.getElementById("scenario-text").textContent = "Game complete! Thanks for playing.";
-    document.getElementById("choices").innerHTML = "";
-    document.getElementById("restart-btn").style.display = "block";
-    return;
-  }
-
-  document.getElementById("outcome-text").textContent = "";
-  document.getElementById("next-btn").style.display = "none";
-  document.getElementById("scenario-text").textContent = scenario.text;
-  const choicesDiv = document.getElementById("choices");
-  choicesDiv.innerHTML = "";
-
-  scenario.choices.forEach((choice) => {
-    const button = document.createElement("button");
-    button.textContent = choice.text;
-    button.onclick = () => {
-      const effects = choice.getEffects();
-      updateScores(effects);
       if (budget === 0) return;
 
-      const scenarioIndex = scenarioOrder[currentScenarioIndex];
-      if (!completedScenarios.includes(scenarioIndex)) {
-        completedScenarios.push(scenarioIndex);
-        saveGameState();
+      while (index < scenarioOrder.length && completedScenarios.includes(scenarioOrder[index])) {
+        index++;
+        currentScenarioIndex = index;
       }
 
-      const outcomeText = choice.getOutcome();
-      document.getElementById("choices").innerHTML = "";
-      document.getElementById("outcome-text").innerHTML = `<strong>You chose:</strong> ${choice.text}<br><br>${outcomeText}`;
-      document.getElementById("next-btn").style.display = "block";
-    };
-    choicesDiv.appendChild(button);
-  });
-}
+      const scenario = scenarios[scenarioOrder[index]];
+      if (!scenario) {
+        document.getElementById("scenario-text").textContent = "Game complete! Thanks for playing.";
+        document.getElementById("choices").innerHTML = "";
+        document.getElementById("restart-btn").style.display = "block";
+        return;
+      }
 
+      document.getElementById("outcome-text").textContent = "";
+      document.getElementById("next-btn").style.display = "none";
+      document.getElementById("scenario-text").textContent = scenario.text;
+      const choicesDiv = document.getElementById("choices");
+      choicesDiv.innerHTML = "";
+
+      scenario.choices.forEach((choice) => {
+        const button = document.createElement("button");
+        button.textContent = choice.text;
+        button.onclick = () => {
+          const effects = choice.getEffects();
+          updateScores(effects);
+          if (budget === 0) return;
+
+          const scenarioIndex = scenarioOrder[currentScenarioIndex];
+          if (!completedScenarios.includes(scenarioIndex)) {
+            completedScenarios.push(scenarioIndex);
+            saveGameState();
+          }
+
+          const outcomeText = choice.getOutcome();
+          document.getElementById("choices").innerHTML = "";
+          document.getElementById("outcome-text").innerHTML = `<strong>You chose:</strong> ${choice.text}<br><br>${outcomeText}`;
+          document.getElementById("next-btn").style.display = "block";
+        };
+        choicesDiv.appendChild(button);
+      });
+    }
 
     function goToNextScenario() {
-      document.getElementById("budget-change").textContent = "";
-      document.getElementById("reputation-change").textContent = "";
-      document.getElementById("security-change").textContent = "";
-      document.getElementById("budget-change").className = "score-change";
-      document.getElementById("reputation-change").className = "score-change";
-      document.getElementById("security-change").className = "score-change";
+      ["budget", "reputation", "security"].forEach(id => {
+        const change = document.getElementById(`${id}-change`);
+        change.textContent = "";
+        change.className = "score-change";
+      });
       currentScenarioIndex++;
       saveGameState();
       showScenario(currentScenarioIndex);
