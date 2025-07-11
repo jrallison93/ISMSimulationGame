@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ISM Game Homepage</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f0f0f0;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 1rem 2rem;
+      margin: 1rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .start-btn {
+      background-color: #28a745;
+      color: white;
+    }
+    .reset-btn {
+      background-color: #dc3545;
+      color: white;
+    }
+    .stats {
+      margin-top: 2rem;
+      text-align: left;
+    }
+    .metric {
+      margin-bottom: 1.2rem;
+    }
+    .bar {
+      height: 20px;
+      border-radius: 10px;
+      background: #ddd;
+      overflow: hidden;
+    }
+    .fill {
+      height: 100%;
+      transition: width 0.3s ease-in-out;
+    }
+    .budget .fill { background: #007bff; }
+    .reputation .fill { background: #ffc107; }
+    .security .fill { background: #17a2b8; }
+    .commentary {
+      font-size: 0.9rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to the ISM Strategy Game</h1>
+    <p>Test your decision-making as an information security manager. Each choice impacts your company's Budget, Reputation, and Security. Can you strike the right balance?</p>
+
+    <button class="start-btn" onclick="window.location.href='index.html'">Start Scenario</button>
+    <button class="reset-btn" onclick="resetGame()">Reset Game</button>
+
+    <div class="stats">
+      <h3>Current Metrics</h3>
+
+      <div class="metric budget">
+        <strong>Budget:</strong>
+        <div class="bar"><div class="fill" id="budget-bar"></div></div>
+        <div class="commentary" id="budget-comment"></div>
+      </div>
+
+      <div class="metric reputation">
+        <strong>Reputation:</strong>
+        <div class="bar"><div class="fill" id="reputation-bar"></div></div>
+        <div class="commentary" id="reputation-comment"></div>
+      </div>
+
+      <div class="metric security">
+        <strong>Security:</strong>
+        <div class="bar"><div class="fill" id="security-bar"></div></div>
+        <div class="commentary" id="security-comment"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function loadGameState() {
+      const saved = localStorage.getItem("ismGameState");
+      if (saved) return JSON.parse(saved);
+      return {
+        budget: 100,
+        reputation: 100,
+        security: 100
+      };
+    }
+
+    function getCommentary(score) {
+      if (score >= 80) return "Excellent performance in this area.";
+      if (score >= 60) return "Above average, keep it up.";
+      if (score >= 40) return "Needs improvement.";
+      if (score >= 20) return "Critical condition.";
+      return "Failing — take immediate action!";
+    }
+
+    function updateBars() {
+      const state = loadGameState();
+
+      const update = (id, value, commentId) => {
+        const bar = document.getElementById(id);
+        bar.style.width = `${value}%`;
+        bar.textContent = value;
+        document.getElementById(commentId).textContent = getCommentary(value);
+      };
+
+      update("budget-bar", state.budget, "budget-comment");
+      update("reputation-bar", state.reputation, "reputation-comment");
+      update("security-bar", state.security, "security-comment");
+    }
+
+    function resetGame() {
+      localStorage.removeItem("ismGameState");
+      updateBars();
+      alert("Game state has been reset.");
+    }
+
+    updateBars();
+  </script>
+</body>
+</html>
