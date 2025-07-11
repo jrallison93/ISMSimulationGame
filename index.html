@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ISM Scenario Game</title>
   <style>
     body {
@@ -52,27 +52,25 @@
       font-style: italic;
       color: #333;
     }
-    #next-btn {
+    #next-btn, #restart-btn, #home-btn {
       display: none;
       margin-top: 1rem;
       padding: 0.8rem;
       border: none;
-      background: #28a745;
       color: white;
       font-size: 1rem;
       border-radius: 5px;
       cursor: pointer;
     }
+    #next-btn {
+      background: #28a745;
+    }
     #restart-btn {
-      display: none;
-      margin-top: 1rem;
-      padding: 0.8rem;
-      border: none;
       background: #dc3545;
-      color: white;
-      font-size: 1rem;
-      border-radius: 5px;
-      cursor: pointer;
+    }
+    #home-btn {
+      background: #6c757d;
+      display: block;
     }
   </style>
 </head>
@@ -83,11 +81,13 @@
     <div class="outcome" id="outcome-text"></div>
     <button id="next-btn" onclick="goToNextScenario()">Next Scenario</button>
     <button id="restart-btn" onclick="restartGame()">Restart Game</button>
+    <button id="home-btn" onclick="goHome()">Return to Homepage</button>
+
     <div class="scores">
       <h3>Scores</h3>
-      <p>Budget: <span id="budget">100</span><span class="score-change" id="budget-change"></span></p>
-      <p>Reputation: <span id="reputation">100</span><span class="score-change" id="reputation-change"></span></p>
-      <p>Security: <span id="security">100</span><span class="score-change" id="security-change"></span></p>
+      <p>Budget: <span id="budget">0</span><span class="score-change" id="budget-change"></span></p>
+      <p>Reputation: <span id="reputation">0</span><span class="score-change" id="reputation-change"></span></p>
+      <p>Security: <span id="security">0</span><span class="score-change" id="security-change"></span></p>
     </div>
   </div>
 
@@ -95,70 +95,66 @@
     let budget, reputation, security;
     let currentScenarioIndex, scenarioOrder;
 
-    function initialiseGame() {
-      budget = 100;
-      reputation = 100;
-      security = 100;
-      currentScenarioIndex = 0;
-      scenarioOrder = shuffle([...Array(scenarios.length).keys()]);
-      document.getElementById("restart-btn").style.display = "none";
-      showScenario(currentScenarioIndex);
+    function loadGameState() {
+      const saved = JSON.parse(localStorage.getItem("ismGameState"));
+      if (saved) {
+        ({ budget, reputation, security, currentScenarioIndex, scenarioOrder } = saved);
+      } else {
+        budget = 100;
+        reputation = 100;
+        security = 100;
+        currentScenarioIndex = 0;
+        scenarioOrder = shuffle([...Array(scenarios.length).keys()]);
+      }
     }
 
-    let scenarios = [
+    function saveGameState() {
+      localStorage.setItem("ismGameState", JSON.stringify({
+        budget,
+        reputation,
+        security,
+        currentScenarioIndex,
+        scenarioOrder
+      }));
+    }
+
+    function initialiseGame() {
+      loadGameState();
+      document.getElementById("restart-btn").style.display = "none";
+      showScenario(currentScenarioIndex);
+      updateScoreDisplay();
+    }
+
+    const scenarios = [
       {
         text: "Your company is facing increasing phishing attacks. What action do you take?",
         choices: [
           {
             text: "Invest in phishing simulation training",
-            getEffects: () => {
-              if (security < 60) {
-                return { budget: -10, reputation: +10, security: +20 };
-              } else {
-                return { budget: -5, reputation: +2, security: +5 };
-              }
-            },
-            getOutcome: () => {
-              if (security < 60) {
-                return "Training greatly improved employee awareness and reduced attack success rates.";
-              } else {
-                return "While already quite secure, training maintained vigilance and had a small benefit.";
-              }
-            }
+            getEffects: () => security < 60
+              ? { budget: -10, reputation: +10, security: +20 }
+              : { budget: -5, reputation: +2, security: +5 },
+            getOutcome: () => security < 60
+              ? "Training greatly improved employee awareness and reduced attack success rates."
+              : "While already quite secure, training maintained vigilance and had a small benefit."
           },
           {
             text: "Ignore for now and monitor",
-            getEffects: () => {
-              if (security < 50) {
-                return { budget: 0, reputation: -20, security: -30 };
-              } else {
-                return { budget: 0, reputation: -5, security: -10 };
-              }
-            },
-            getOutcome: () => {
-              if (security < 50) {
-                return "Ignoring the issue led to a serious breach, damaging your company's credibility.";
-              } else {
-                return "Nothing major happened yet, but stakeholders are beginning to question your inaction.";
-              }
-            }
+            getEffects: () => security < 50
+              ? { budget: 0, reputation: -20, security: -30 }
+              : { budget: 0, reputation: -5, security: -10 },
+            getOutcome: () => security < 50
+              ? "Ignoring the issue led to a serious breach, damaging your company's credibility."
+              : "Nothing major happened yet, but stakeholders are beginning to question your inaction."
           },
           {
             text: "Hire an external consultant",
-            getEffects: () => {
-              if (budget < 30) {
-                return { budget: -25, reputation: +5, security: +5 };
-              } else {
-                return { budget: -25, reputation: +10, security: +15 };
-              }
-            },
-            getOutcome: () => {
-              if (budget < 30) {
-                return "The consultant was helpful, but the expense strained other departments.";
-              } else {
-                return "The consultant improved defences and reassured your board of directors.";
-              }
-            }
+            getEffects: () => budget < 30
+              ? { budget: -25, reputation: +5, security: +5 }
+              : { budget: -25, reputation: +10, security: +15 },
+            getOutcome: () => budget < 30
+              ? "The consultant was helpful, but the expense strained other departments."
+              : "The consultant improved defences and reassured your board of directors."
           }
         ]
       },
@@ -177,20 +173,12 @@
           },
           {
             text: "Implement a managed BYOD policy with MDM software",
-            getEffects: () => {
-              if (budget > 70) {
-                return { budget: -15, reputation: +10, security: +15 };
-              } else {
-                return { budget: -15, reputation: +5, security: +10 };
-              }
-            },
-            getOutcome: () => {
-              if (budget > 70) {
-                return "Managed BYOD was fully funded and led to a very successful implementation.";
-              } else {
-                return "Balanced approach improved oversight and kept users happy, though it came with setup costs.";
-              }
-            }
+            getEffects: () => budget > 70
+              ? { budget: -15, reputation: +10, security: +15 }
+              : { budget: -15, reputation: +5, security: +10 },
+            getOutcome: () => budget > 70
+              ? "Managed BYOD was fully funded and led to a very successful implementation."
+              : "Balanced approach improved oversight and kept users happy, though it came with setup costs."
           }
         ]
       },
@@ -199,54 +187,30 @@
         choices: [
           {
             text: "Pay the ransom to recover data quickly",
-            getEffects: () => {
-              if (budget < 50) {
-                return { budget: -100, reputation: -10, security: -5 };
-              } else {
-                return { budget: -100, reputation: -15, security: -10 };
-              }
-            },
-            getOutcome: () => {
-              if (budget < 50) {
-                return "Paying the ransom helped restore operations, but emboldened future attacks and damaged your reputation.";
-              } else {
-                return "The ransom was paid swiftly, but stakeholders questioned the long-term implications of negotiating with criminals.";
-              }
-            }
+            getEffects: () => budget < 50
+              ? { budget: -100, reputation: -10, security: -5 }
+              : { budget: -100, reputation: -15, security: -10 },
+            getOutcome: () => budget < 50
+              ? "Paying the ransom helped restore operations, but emboldened future attacks and damaged your reputation."
+              : "The ransom was paid swiftly, but stakeholders questioned the long-term implications of negotiating with criminals."
           },
           {
             text: "Restore from backups and report the incident",
-            getEffects: () => {
-              if (security > 80) {
-                return { budget: -10, reputation: +5, security: +10 };
-              } else {
-                return { budget: -20, reputation: 0, security: +5 };
-              }
-            },
-            getOutcome: () => {
-              if (security > 80) {
-                return "Well-prepared with secure backups, recovery was smooth and transparency improved public trust.";
-              } else {
-                return "Restoring took time, but avoiding ransom payment upheld policy and demonstrated some resilience.";
-              }
-            }
+            getEffects: () => security > 80
+              ? { budget: -10, reputation: +5, security: +10 }
+              : { budget: -20, reputation: 0, security: +5 },
+            getOutcome: () => security > 80
+              ? "Well-prepared with secure backups, recovery was smooth and transparency improved public trust."
+              : "Restoring took time, but avoiding ransom payment upheld policy and demonstrated some resilience."
           },
           {
             text: "Take systems offline and investigate",
-            getEffects: () => {
-              if (reputation > 80) {
-                return { budget: -15, reputation: -5, security: +10 };
-              } else {
-                return { budget: -15, reputation: -10, security: +15 };
-              }
-            },
-            getOutcome: () => {
-              if (reputation > 80) {
-                return "Taking action showed responsibility, though delays in service caused some customer complaints.";
-              } else {
-                return "The breach was contained and the root cause identified, helping prevent similar future incidents.";
-              }
-            }
+            getEffects: () => reputation > 80
+              ? { budget: -15, reputation: -5, security: +10 }
+              : { budget: -15, reputation: -10, security: +15 },
+            getOutcome: () => reputation > 80
+              ? "Taking action showed responsibility, though delays in service caused some customer complaints."
+              : "The breach was contained and the root cause identified, helping prevent similar future incidents."
           }
         ]
       }
@@ -261,34 +225,36 @@
     }
 
     function updateScores(effects) {
+      const clamp = (value) => Math.max(0, value);
+
       const updateDisplay = (id, change) => {
         const element = document.getElementById(id);
         element.textContent = change !== 0 ? ` (${change >= 0 ? '+' : ''}${change})` : '';
         element.className = 'score-change';
-        if (change > 0) {
-          element.classList.add('positive');
-        } else if (change < 0) {
-          element.classList.add('negative');
-        }
+        if (change > 0) element.classList.add('positive');
+        else if (change < 0) element.classList.add('negative');
       };
-
-      const clamp = (value) => Math.max(0, value);
-
-      budget = clamp(budget + effects.budget);
-      reputation = clamp(reputation + effects.reputation);
-      security = clamp(security + effects.security);
-
-      document.getElementById("budget").textContent = budget;
-      document.getElementById("reputation").textContent = reputation;
-      document.getElementById("security").textContent = security;
 
       updateDisplay("budget-change", effects.budget);
       updateDisplay("reputation-change", effects.reputation);
       updateDisplay("security-change", effects.security);
 
+      budget = clamp(budget + effects.budget);
+      reputation = clamp(reputation + effects.reputation);
+      security = clamp(security + effects.security);
+
+      updateScoreDisplay();
+      saveGameState();
+
       if (budget === 0) {
         endGame("Bankruptcy! Your company has run out of budget and cannot continue operations.");
       }
+    }
+
+    function updateScoreDisplay() {
+      document.getElementById("budget").textContent = budget;
+      document.getElementById("reputation").textContent = reputation;
+      document.getElementById("security").textContent = security;
     }
 
     function showScenario(index) {
@@ -332,6 +298,7 @@
       document.getElementById("reputation-change").className = "score-change";
       document.getElementById("security-change").className = "score-change";
       currentScenarioIndex++;
+      saveGameState();
       showScenario(currentScenarioIndex);
     }
 
@@ -344,7 +311,12 @@
     }
 
     function restartGame() {
+      localStorage.removeItem("ismGameState");
       initialiseGame();
+    }
+
+    function goHome() {
+      window.location.href = "homepage.html";
     }
 
     initialiseGame();
