@@ -167,13 +167,27 @@
 
     let currentScenario = 0;
 
-    function updateScores(effects) {
+    function updateScores(effects, showChanges = false) {
+      const prev = { budget, reputation, security };
+
       budget += effects.budget;
       reputation += effects.reputation;
       security += effects.security;
+
       document.getElementById("budget").textContent = budget;
       document.getElementById("reputation").textContent = reputation;
       document.getElementById("security").textContent = security;
+
+      if (showChanges) {
+        let changes = `\n\nScore changes:`;
+        changes += `\nBudget: ${prev.budget} → ${budget} (${effects.budget >= 0 ? "+" : ""}${effects.budget})`;
+        changes += `\nReputation: ${prev.reputation} → ${reputation} (${effects.reputation >= 0 ? "+" : ""}${effects.reputation})`;
+        changes += `\nSecurity: ${prev.security} → ${security} (${effects.security >= 0 ? "+" : ""}${effects.security})`;
+
+        return changes;
+      }
+
+      return "";
     }
 
     function showScenario(index) {
@@ -196,9 +210,9 @@
         button.textContent = choice.text;
         button.onclick = () => {
           const effects = choice.getEffects();
-          updateScores(effects);
+          const changes = updateScores(effects, true);
           const outcomeText = choice.getOutcome();
-          document.getElementById("outcome-text").textContent = outcomeText;
+          document.getElementById("outcome-text").textContent = outcomeText + changes;
           document.getElementById("choices").innerHTML = "";
           document.getElementById("next-btn").style.display = "block";
         };
