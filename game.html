@@ -85,7 +85,7 @@
 
     <div class="scores">
       <h3>Scores</h3>
-      <p>Budget: <span id="budget">0</span><span class="score-change" id="budget-change"></span></p>
+      <p>Budget: <span id="budget">£500,000</span><span class="score-change" id="budget-change"></span></p>
       <p>Reputation: <span id="reputation">0</span><span class="score-change" id="reputation-change"></span></p>
       <p>Security: <span id="security">0</span><span class="score-change" id="security-change"></span></p>
       <p>Staff Morale: <span id="morale">0</span><span class="score-change" id="morale-change"></span></p>
@@ -94,7 +94,7 @@
 
   <script>
     const scenarios = [
-      {
+{
         text: "Your company is facing increasing phishing attacks. What action do you take?",
         choices: [
           {
@@ -152,9 +152,10 @@
             getEffects: () => ({ budget: -15, reputation: -5, security: +10, morale: -5 }),
             getOutcome: () => "Operations slowed down, creating temporary stress."
           }
-        ]
-      }
-    ];
+];
+
+
+
 
     let budget, reputation, security, morale;
     let currentScenarioIndex, scenarioOrder, completedScenarios;
@@ -164,7 +165,7 @@
       if (saved) {
         ({ budget, reputation, security, morale, currentScenarioIndex, scenarioOrder, completedScenarios } = saved);
       } else {
-        budget = 100;
+        budget = 500000;
         reputation = 100;
         security = 100;
         morale = 100;
@@ -197,20 +198,22 @@
 
     function updateScores(effects) {
       const clamp = (val) => Math.max(0, val);
-      const updateDisplay = (id, change) => {
+      const updateDisplay = (id, change, isCurrency = false) => {
         const element = document.getElementById(id);
-        element.textContent = change !== 0 ? ` (${change >= 0 ? '+' : ''}${change})` : '';
+        element.textContent = change !== 0
+          ? ` (${change >= 0 ? '+' : ''}${isCurrency ? '£' + Math.abs(change * 1000).toLocaleString() : change})`
+          : '';
         element.className = 'score-change';
         if (change > 0) element.classList.add('positive');
         else if (change < 0) element.classList.add('negative');
       };
 
-      updateDisplay("budget-change", effects.budget);
+      updateDisplay("budget-change", effects.budget, true);
       updateDisplay("reputation-change", effects.reputation);
       updateDisplay("security-change", effects.security);
       updateDisplay("morale-change", effects.morale);
 
-      budget = clamp(budget + effects.budget);
+      budget = clamp(budget + effects.budget * 1000); // assume game logic effects are in thousands
       reputation = clamp(reputation + effects.reputation);
       security = clamp(security + effects.security);
       morale = clamp(morale + effects.morale);
@@ -224,7 +227,7 @@
     }
 
     function updateScoreDisplay() {
-      document.getElementById("budget").textContent = budget;
+      document.getElementById("budget").textContent = "£" + budget.toLocaleString();
       document.getElementById("reputation").textContent = reputation;
       document.getElementById("security").textContent = security;
       document.getElementById("morale").textContent = morale;
