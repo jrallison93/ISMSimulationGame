@@ -173,9 +173,9 @@
         ({ budget, reputation, security, morale, currentScenarioIndex, scenarioOrder, completedScenarios } = saved);
       } else {
         budget = 500000;    // base budget in pounds
-        reputation = 0;
-        security = 0;
-        morale = 0;
+        reputation = 100;
+        security = 100;
+        morale = 100;
         currentScenarioIndex = 0;
         scenarioOrder = shuffle([...Array(scenarios.length).keys()]);
         completedScenarios = [];
