@@ -29,10 +29,16 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
     .start-btn {
       background-color: #28a745;
       color: white;
+    }
+    .start-btn:disabled {
+      cursor: not-allowed;
+      background-color: #6c757d;
+      color: #ccc;
     }
     .reset-btn {
       background-color: #dc3545;
@@ -83,7 +89,7 @@
     <h1>Welcome to the ISM Strategy Game</h1>
     <p>Test your decision-making as an information security manager. Each choice impacts your company's Budget, Reputation, Security, and Staff Morale. Can you strike the right balance?</p>
 
-    <button class="start-btn" onclick="window.location.href='game.html'">Start Scenario</button>
+    <button class="start-btn" id="start-btn">Start Scenario</button>
     <button class="reset-btn" onclick="resetGame()">Reset Game</button>
 
     <div class="stats">
@@ -119,7 +125,8 @@
   </div>
 
   <script>
-    const TOTAL_SCENARIOS = 6;
+    // Adjust this to match your actual total number of scenarios in the game
+    const TOTAL_SCENARIOS = 3;
     const MAX_VALUE = 200; // For reputation, security, morale
 
     // Format number as £ with commas
@@ -137,7 +144,7 @@
       return "No budget — game over!";
     }
 
-    // Existing commentary scale for other metrics
+    // Commentary scale for other metrics
     function getCommentary(score) {
       if (score >= 150) return "Excellent performance in this area.";
       if (score >= 120) return "Above average, keep it up.";
@@ -182,6 +189,16 @@
       const completedCount = Array.isArray(state.completedScenarios) ? state.completedScenarios.length : 0;
       const progressText = `${completedCount} of ${TOTAL_SCENARIOS} scenarios completed.`;
       document.getElementById("progress-text").textContent = completedCount > 0 ? progressText : "You haven't started the game yet.";
+
+      // Disable Start button if all scenarios completed
+      const startBtn = document.getElementById("start-btn");
+      if (completedCount >= TOTAL_SCENARIOS) {
+        startBtn.disabled = true;
+        startBtn.textContent = "All Scenarios Completed";
+      } else {
+        startBtn.disabled = false;
+        startBtn.textContent = "Start Scenario";
+      }
     }
 
     function resetGame() {
@@ -189,6 +206,18 @@
       updateBars();
       alert("Game state has been reset.");
     }
+
+    // Start button click handler
+    document.getElementById('start-btn').addEventListener('click', () => {
+      const state = loadGameState();
+
+      if (state.completedScenarios && state.completedScenarios.length >= TOTAL_SCENARIOS) {
+        alert("You have completed all scenarios! Please reset the game to play again.");
+      } else {
+        // Proceed to game page
+        window.location.href = 'game.html';
+      }
+    });
 
     updateBars();
   </script>
