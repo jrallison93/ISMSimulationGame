@@ -65,6 +65,7 @@
     .budget .fill { background: #007bff; }
     .reputation .fill { background: #ffc107; color: black; }
     .security .fill { background: #17a2b8; }
+    .morale .fill { background: #6f42c1; }
     .commentary {
       font-size: 0.9rem;
       color: #555;
@@ -74,7 +75,7 @@
 <body>
   <div class="container">
     <h1>Welcome to the ISM Strategy Game</h1>
-    <p>Test your decision-making as an information security manager. Each choice impacts your company's Budget, Reputation, and Security. Can you strike the right balance?</p>
+    <p>Test your decision-making as an information security manager. Each choice impacts your company's Budget, Reputation, Security, and Staff Morale. Can you strike the right balance?</p>
 
     <button class="start-btn" onclick="window.location.href='game.html'">Start Scenario</button>
     <button class="reset-btn" onclick="resetGame()">Reset Game</button>
@@ -99,6 +100,12 @@
         <div class="bar"><div class="fill" id="security-bar"></div></div>
         <div class="commentary" id="security-comment"></div>
       </div>
+
+      <div class="metric morale">
+        <strong>Staff Morale:</strong>
+        <div class="bar"><div class="fill" id="morale-bar"></div></div>
+        <div class="commentary" id="morale-comment"></div>
+      </div>
     </div>
 
     <h2>Your Progress</h2>
@@ -107,7 +114,7 @@
 
   <script>
     const TOTAL_SCENARIOS = 6;
-    const MAX_VALUE = 200; // Maximum value for the bars
+    const MAX_VALUE = 200;
 
     function loadGameState() {
       const saved = localStorage.getItem("ismGameState");
@@ -116,6 +123,7 @@
         budget: 100,
         reputation: 100,
         security: 100,
+        morale: 100,
         completedScenarios: []
       };
     }
@@ -134,7 +142,6 @@
 
       const update = (id, value, commentId) => {
         const bar = document.getElementById(id);
-        // Calculate width percentage relative to MAX_VALUE
         const widthPercent = Math.min((value / MAX_VALUE) * 100, 100);
         bar.style.width = `${widthPercent}%`;
         bar.textContent = value;
@@ -144,8 +151,8 @@
       update("budget-bar", state.budget, "budget-comment");
       update("reputation-bar", state.reputation, "reputation-comment");
       update("security-bar", state.security, "security-comment");
+      update("morale-bar", state.morale, "morale-comment");
 
-      // Update the text progress only
       const completedCount = Array.isArray(state.completedScenarios) ? state.completedScenarios.length : 0;
       const progressText = `${completedCount} of ${TOTAL_SCENARIOS} scenarios completed.`;
       document.getElementById("progress-text").textContent = completedCount > 0 ? progressText : "You haven't started the game yet.";
