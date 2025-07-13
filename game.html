@@ -121,24 +121,28 @@
         ]
       },
       {
-        text: "You must decide on a policy for personal devices at work (BYOD). What do you choose?",
-        choices: [
-          {
-            text: "Ban BYOD entirely",
-            getEffects: () => ({ budget: 0, reputation: -5, security: +20, morale: -10 }),
-            getOutcome: () => "Security improved, but staff resented the rigid control."
-          },
-          {
-            text: "Allow with minimal monitoring",
-            getEffects: () => ({ budget: -5000, reputation: +5, security: -10, morale: +5 }),
-            getOutcome: () => "Flexibility was appreciated, though risk exposure increased."
-          },
-          {
-            text: "Implement a managed BYOD policy with MDM software",
-            getEffects: ({budget}) => budget > 70000
-              ? { budget: -15000, reputation: +10, security: +15, morale: +5 }
-              : { budget: -15000, reputation: +5, security: +10, morale: +2 },
-            getOutcome: () => "Staff accepted the compromise and appreciated transparent policies."
+        text: "With remote work now embedded in your organisational culture, the question of how to handle personal devices in the workplace (BYOD – Bring Your Own Device) has become increasingly urgent. While some staff appreciate the convenience and autonomy of using their own smartphones and laptops, your security team warns that uncontrolled devices increase the attack surface significantly. Legal and HR departments are also concerned about data protection, employee surveillance, and potential liability. You must decide on a BYOD policy that balances risk, cost, and morale across the organisation.",
+  
+  choices: [
+    {
+      text: "Ban BYOD entirely",
+      getEffects: () => ({ budget: 0, reputation: -5, security: +20, morale: -10 }),
+      getOutcome: () => 
+        "By implementing a complete ban on personal devices, you significantly reduce your organisation’s exposure to unmonitored endpoints and potential malware infections. The IT team welcomes the decision, citing reduced complexity. However, many staff members view the policy as overly draconian and inflexible, especially those who regularly travel or work from home. Internal surveys indicate growing frustration over the lack of flexibility, and HR logs a noticeable uptick in complaints."
+    },
+    {
+      text: "Allow with minimal monitoring",
+      getEffects: () => ({ budget: -5000, reputation: +5, security: -10, morale: +5 }),
+      getOutcome: () => 
+        "You decide to adopt a permissive BYOD stance, allowing employees to use their own devices with only light monitoring and basic network segmentation. This fosters a sense of trust and autonomy among staff, particularly younger digital-native employees. While your reputation as a flexible, modern employer improves, your security team logs a sharp increase in unmanaged device connections. This looser control leaves the door open to phishing apps, data leakage, and non-compliant software—raising concerns during the next audit."
+    },
+    {
+      text: "Implement a managed BYOD policy with MDM software",
+      getEffects: ({ budget }) => budget > 70000
+        ? { budget: -15000, reputation: +10, security: +15, morale: +5 }
+        : { budget: -15000, reputation: +5, security: +10, morale: +2 },
+      getOutcome: () =>
+        "You invest in a comprehensive Mobile Device Management (MDM) system that allows you to monitor, encrypt, and control access on personal devices without violating staff privacy. While some employees are initially wary of management's control over their devices, your transparent communication and opt-out clauses reassure most of the workforce. The policy strikes a pragmatic balance: security risk is meaningfully reduced, staff productivity remains high, and your organisation is commended in a sector briefing for proactive digital governance."
           }
         ]
       },
