@@ -94,6 +94,30 @@
 
   <script>
     const scenarios = [
+{
+  text: "Your company is planning to onboard a new cloud-based payroll system, managed by a third-party vendor. While the solution promises efficiency and long-term savings, your security officer has flagged concerns about the vendor’s data handling practices and lack of recent independent security audits. Meanwhile, HR is eager to roll out the system quickly, citing outdated infrastructure and rising complaints from staff about errors in payslips. You must decide how to proceed with vendor engagement and risk management.",
+  
+  choices: [
+    {
+      text: "Proceed immediately with minimal due diligence",
+      getEffects: () => ({ budget: -5000, reputation: -10, security: -15, morale: +5 }),
+      getOutcome: () =>
+        "You prioritise speed over caution and push the vendor into production with only a basic review of their documentation. HR is pleased by the improved user interface and reduced workload, and staff morale briefly improves. However, a data misconfiguration in the second month leads to employee bank details being exposed. This triggers a reputational blow and requires a reactive PR campaign and compensation costs. Regulators issue a warning about your due diligence process."
+    },
+    {
+      text: "Delay launch to conduct a thorough third-party audit",
+      getEffects: () => ({ budget: -15000, reputation: +5, security: +20, morale: -5 }),
+      getOutcome: () =>
+        "You commission an independent audit of the vendor’s infrastructure, which delays implementation by six weeks. Some staff express frustration over the delay, and HR reports internal pressure to speed things up. However, the audit uncovers critical vulnerabilities, which the vendor addresses before launch. Your commitment to security is praised by the board and contributes to your organisation’s risk maturity model scoring. The eventual launch is smooth, with confidence from all stakeholders."
+    },
+    {
+      text: "Choose a more secure but expensive competitor",
+      getEffects: () => ({ budget: -30000, reputation: +10, security: +15, morale: +2 }),
+      getOutcome: () =>
+        "You decide to reject the original vendor and instead partner with a more expensive provider that holds ISO/IEC 27001 certification and a strong compliance record. The upfront cost is high, and some finance stakeholders grumble about the decision. However, the system launches with no major issues, and staff appreciate the seamless user experience. Over time, the provider proves to be a reliable partner, and your company is viewed as prioritising quality over short-term savings."
+    }
+  ]
+}
       {
         text: "Your company is facing increasing phishing attacks. What action do you take?",
         choices: [
