@@ -225,9 +225,9 @@
       updateDisplay("morale-change", effects.morale);
 
       budget = clamp(budget + (effects.budget || 0));
-      reputation = clamp(reputation + (effects.reputation || 0), 100);
-      security = clamp(security + (effects.security || 0), 100);
-      morale = clamp(morale + (effects.morale || 0), 100);
+      reputation = clamp(reputation + (effects.reputation || 0), 200);
+      security = clamp(security + (effects.security || 0), 200);
+      morale = clamp(morale + (effects.morale || 0), 200);
 
       updateScoreDisplay();
       saveGameState();
