@@ -125,101 +125,105 @@
   </div>
 
   <script>
-    // Adjust this to match your actual total number of scenarios in the game
-    const TOTAL_SCENARIOS = 3;
-    const MAX_VALUE = 200; // For reputation, security, morale
+  const TOTAL_SCENARIOS = 3;
+  const MAX_VALUE = 200;
 
-    // Format number as £ with commas
-    function formatCurrency(value) {
-      return "£" + value.toLocaleString('en-GB');
+  function formatCurrency(value) {
+    return "£" + value.toLocaleString('en-GB');
+  }
+
+  function getBudgetCommentary(budget) {
+    if (budget >= 700000) return "Excellent budget — strong financial backing.";
+    if (budget >= 550000) return "Good budget — sufficient resources available.";
+    if (budget >= 400000) return "Moderate budget — be cautious with spending.";
+    if (budget >= 250000) return "Low budget — consider reallocating resources.";
+    if (budget > 0) return "Critical budget — immediate action needed!";
+    return "No budget — game over!";
+  }
+
+  function getCommentary(score) {
+    if (score >= 150) return "Excellent performance in this area.";
+    if (score >= 120) return "Above average, keep it up.";
+    if (score >= 85) return "Average performance.";
+    if (score >= 35) return "Needs improvement.";
+    if (score >= 10) return "Critical condition.";
+    return "Failing — take immediate action!";
+  }
+
+  function loadGameState() {
+    const saved = localStorage.getItem("ismGameState");
+    if (saved) return JSON.parse(saved);
+    return {
+      budget: 500000,
+      reputation: 100,
+      security: 100,
+      morale: 100,
+      completedScenarios: []
+    };
+  }
+
+  function updateBars() {
+    const state = loadGameState();
+
+    document.getElementById("budget-value").textContent = formatCurrency(state.budget);
+    document.getElementById("budget-comment").textContent = getBudgetCommentary(state.budget);
+
+    const update = (id, value, commentId) => {
+      const bar = document.getElementById(id);
+      const widthPercent = Math.min((value / MAX_VALUE) * 100, 100);
+      bar.style.width = `${widthPercent}%`;
+      bar.textContent = value;
+      document.getElementById(commentId).textContent = getCommentary(value);
+    };
+
+    update("reputation-bar", state.reputation, "reputation-comment");
+    update("security-bar", state.security, "security-comment");
+    update("morale-bar", state.morale, "morale-comment");
+
+    const completedCount = Array.isArray(state.completedScenarios) ? state.completedScenarios.length : 0;
+    const progressText = `${completedCount} of ${TOTAL_SCENARIOS} scenarios completed.`;
+    document.getElementById("progress-text").textContent = completedCount > 0 ? progressText : "You haven't started the game yet.";
+
+    const startBtn = document.getElementById("start-btn");
+    if (completedCount >= TOTAL_SCENARIOS) {
+      startBtn.disabled = true;
+      startBtn.textContent = "All Scenarios Completed";
+    } else {
+      startBtn.disabled = false;
+      startBtn.textContent = "Start Scenario";
     }
+  }
 
-    // Commentary scale for Budget (in £)
-    function getBudgetCommentary(budget) {
-      if (budget >= 700000) return "Excellent budget — strong financial backing.";
-      if (budget >= 550000) return "Good budget — sufficient resources available.";
-      if (budget >= 400000) return "Moderate budget — be cautious with spending.";
-      if (budget >= 250000) return "Low budget — consider reallocating resources.";
-      if (budget > 0) return "Critical budget — immediate action needed!";
-      return "No budget — game over!";
-    }
-
-    // Commentary scale for other metrics
-    function getCommentary(score) {
-      if (score >= 150) return "Excellent performance in this area.";
-      if (score >= 120) return "Above average, keep it up.";
-      if (score >= 85) return "Average performance.";
-      if (score >= 35) return "Needs improvement.";
-      if (score >= 10) return "Critical condition.";
-      return "Failing — take immediate action!";
-    }
-
-    function loadGameState() {
-      const saved = localStorage.getItem("ismGameState");
-      if (saved) return JSON.parse(saved);
-      return {
-        budget: 500000,
-        reputation: 100,
-        security: 100,
-        morale: 100,
-        completedScenarios: []
-      };
-    }
-
-    function updateBars() {
-      const state = loadGameState();
-
-      // Update Budget: show formatted value and commentary only
-      document.getElementById("budget-value").textContent = formatCurrency(state.budget);
-      document.getElementById("budget-comment").textContent = getBudgetCommentary(state.budget);
-
-      // Update other metrics with bars
-      const update = (id, value, commentId) => {
-        const bar = document.getElementById(id);
-        const widthPercent = Math.min((value / MAX_VALUE) * 100, 100);
-        bar.style.width = `${widthPercent}%`;
-        bar.textContent = value;
-        document.getElementById(commentId).textContent = getCommentary(value);
-      };
-
-      update("reputation-bar", state.reputation, "reputation-comment");
-      update("security-bar", state.security, "security-comment");
-      update("morale-bar", state.morale, "morale-comment");
-
-      const completedCount = Array.isArray(state.completedScenarios) ? state.completedScenarios.length : 0;
-      const progressText = `${completedCount} of ${TOTAL_SCENARIOS} scenarios completed.`;
-      document.getElementById("progress-text").textContent = completedCount > 0 ? progressText : "You haven't started the game yet.";
-
-      // Disable Start button if all scenarios completed
-      const startBtn = document.getElementById("start-btn");
-      if (completedCount >= TOTAL_SCENARIOS) {
-        startBtn.disabled = true;
-        startBtn.textContent = "All Scenarios Completed";
-      } else {
-        startBtn.disabled = false;
-        startBtn.textContent = "Start Scenario";
-      }
-    }
-
-    function resetGame() {
-      localStorage.removeItem("ismGameState");
-      updateBars();
-      alert("Game state has been reset.");
-    }
-
-    // Start button click handler
-    document.getElementById('start-btn').addEventListener('click', () => {
-      const state = loadGameState();
-
-      if (state.completedScenarios && state.completedScenarios.length >= TOTAL_SCENARIOS) {
-        alert("You have completed all scenarios! Please reset the game to play again.");
-      } else {
-        // Proceed to game page
-        window.location.href = 'game.html';
-      }
-    });
-
+  function resetGame() {
+    localStorage.removeItem("ismGameState");
+    localStorage.removeItem("currentScenario");
     updateBars();
-  </script>
+    alert("Game state has been reset.");
+  }
+
+  document.getElementById('start-btn').addEventListener('click', () => {
+    const state = loadGameState();
+
+    if (state.completedScenarios && state.completedScenarios.length >= TOTAL_SCENARIOS) {
+      alert("You have completed all scenarios! Please reset the game to play again.");
+      return;
+    }
+
+    // Find the next incomplete scenario number
+    let nextScenario = 1;
+    for (; nextScenario <= TOTAL_SCENARIOS; nextScenario++) {
+      if (!state.completedScenarios.includes(nextScenario)) break;
+    }
+
+    // Save next scenario number so game.html can load it
+    localStorage.setItem('currentScenario', nextScenario);
+
+    // Redirect to game page
+    window.location.href = 'game.html';
+  });
+
+  updateBars();
+</script>
+
 </body>
 </html>
