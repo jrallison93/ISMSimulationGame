@@ -94,22 +94,28 @@
 
   <script>
     const scenarios = [
-{
+      {
         text: "Your company is facing increasing phishing attacks. What action do you take?",
         choices: [
           {
             text: "Invest in phishing simulation training",
-            getEffects: () => security < 60 ? { budget: -10, reputation: +10, security: +20, morale: +5 } : { budget: -5, reputation: +2, security: +5, morale: 0 },
+            getEffects: ({security}) => security < 60
+              ? { budget: -10000, reputation: +10, security: +20, morale: +5 }
+              : { budget: -5000, reputation: +2, security: +5, morale: 0 },
             getOutcome: () => "Training increased awareness and gave staff a sense of empowerment."
           },
           {
             text: "Ignore for now and monitor",
-            getEffects: () => security < 50 ? { budget: 0, reputation: -20, security: -30, morale: -10 } : { budget: 0, reputation: -5, security: -10, morale: -5 },
+            getEffects: ({security}) => security < 50
+              ? { budget: 0, reputation: -20, security: -30, morale: -10 }
+              : { budget: 0, reputation: -5, security: -10, morale: -5 },
             getOutcome: () => "Staff felt unsupported amid growing threats."
           },
           {
             text: "Hire an external consultant",
-            getEffects: () => budget < 30 ? { budget: -25, reputation: +5, security: +5, morale: -5 } : { budget: -25, reputation: +10, security: +15, morale: +2 },
+            getEffects: ({budget}) => budget < 30000
+              ? { budget: -25000, reputation: +5, security: +5, morale: -5 }
+              : { budget: -25000, reputation: +10, security: +15, morale: +2 },
             getOutcome: () => "Some staff felt sidelined, but overall defences improved."
           }
         ]
@@ -124,12 +130,14 @@
           },
           {
             text: "Allow with minimal monitoring",
-            getEffects: () => ({ budget: -5, reputation: +5, security: -10, morale: +5 }),
+            getEffects: () => ({ budget: -5000, reputation: +5, security: -10, morale: +5 }),
             getOutcome: () => "Flexibility was appreciated, though risk exposure increased."
           },
           {
             text: "Implement a managed BYOD policy with MDM software",
-            getEffects: () => budget > 70 ? { budget: -15, reputation: +10, security: +15, morale: +5 } : { budget: -15, reputation: +5, security: +10, morale: +2 },
+            getEffects: ({budget}) => budget > 70000
+              ? { budget: -15000, reputation: +10, security: +15, morale: +5 }
+              : { budget: -15000, reputation: +5, security: +10, morale: +2 },
             getOutcome: () => "Staff accepted the compromise and appreciated transparent policies."
           }
         ]
@@ -139,23 +147,22 @@
         choices: [
           {
             text: "Pay the ransom to recover data quickly",
-            getEffects: () => ({ budget: -100, reputation: -10, security: -5, morale: -10 }),
+            getEffects: () => ({ budget: -100000, reputation: -10, security: -5, morale: -10 }),
             getOutcome: () => "Staff felt vulnerable and questioned leadership."
           },
           {
             text: "Restore from backups and report the incident",
-            getEffects: () => ({ budget: -20, reputation: 0, security: +5, morale: +5 }),
+            getEffects: () => ({ budget: -20000, reputation: 0, security: +5, morale: +5 }),
             getOutcome: () => "Transparent recovery reassured employees and customers."
           },
           {
             text: "Take systems offline and investigate",
-            getEffects: () => ({ budget: -15, reputation: -5, security: +10, morale: -5 }),
+            getEffects: () => ({ budget: -15000, reputation: -5, security: +10, morale: -5 }),
             getOutcome: () => "Operations slowed down, creating temporary stress."
           }
-];
-
-
-
+        ]
+      }
+    ];
 
     let budget, reputation, security, morale;
     let currentScenarioIndex, scenarioOrder, completedScenarios;
@@ -165,10 +172,10 @@
       if (saved) {
         ({ budget, reputation, security, morale, currentScenarioIndex, scenarioOrder, completedScenarios } = saved);
       } else {
-        budget = 500000;
-        reputation = 100;
-        security = 100;
-        morale = 100;
+        budget = 500000;    // base budget in pounds
+        reputation = 0;
+        security = 0;
+        morale = 0;
         currentScenarioIndex = 0;
         scenarioOrder = shuffle([...Array(scenarios.length).keys()]);
         completedScenarios = [];
@@ -197,12 +204,15 @@
     }
 
     function updateScores(effects) {
-      const clamp = (val) => Math.max(0, val);
+      const clamp = (val, max = Infinity) => Math.min(Math.max(0, val), max);
+
       const updateDisplay = (id, change, isCurrency = false) => {
         const element = document.getElementById(id);
-        element.textContent = change !== 0
-          ? ` (${change >= 0 ? '+' : ''}${isCurrency ? '£' + Math.abs(change * 1000).toLocaleString() : change})`
-          : '';
+        if (change !== 0) {
+          element.textContent = ` (${change > 0 ? '+' : ''}${isCurrency ? '£' + Math.abs(change).toLocaleString() : change})`;
+        } else {
+          element.textContent = '';
+        }
         element.className = 'score-change';
         if (change > 0) element.classList.add('positive');
         else if (change < 0) element.classList.add('negative');
@@ -213,15 +223,15 @@
       updateDisplay("security-change", effects.security);
       updateDisplay("morale-change", effects.morale);
 
-      budget = clamp(budget + effects.budget * 1000); // assume game logic effects are in thousands
-      reputation = clamp(reputation + effects.reputation);
-      security = clamp(security + effects.security);
-      morale = clamp(morale + effects.morale);
+      budget = clamp(budget + (effects.budget || 0));
+      reputation = clamp(reputation + (effects.reputation || 0), 100);
+      security = clamp(security + (effects.security || 0), 100);
+      morale = clamp(morale + (effects.morale || 0), 100);
 
       updateScoreDisplay();
       saveGameState();
 
-      if (budget === 0) {
+      if (budget <= 0) {
         endGame("Bankruptcy! Your company has run out of budget and cannot continue operations.");
       }
     }
@@ -234,23 +244,25 @@
     }
 
     function showScenario(index) {
-      if (budget === 0) return;
+      if (budget <= 0) return;
 
       while (index < scenarioOrder.length && completedScenarios.includes(scenarioOrder[index])) {
         index++;
         currentScenarioIndex = index;
       }
 
-      const scenario = scenarios[scenarioOrder[index]];
-      if (!scenario) {
+      if (index >= scenarioOrder.length) {
+        // All scenarios completed, save final scores and redirect
         localStorage.setItem("finalScores", JSON.stringify({ budget, reputation, security, morale }));
         window.location.href = "end.html";
         return;
       }
 
+      const scenario = scenarios[scenarioOrder[index]];
       document.getElementById("outcome-text").textContent = "";
       document.getElementById("next-btn").style.display = "none";
       document.getElementById("scenario-text").textContent = scenario.text;
+
       const choicesDiv = document.getElementById("choices");
       choicesDiv.innerHTML = "";
 
@@ -258,18 +270,18 @@
         const button = document.createElement("button");
         button.textContent = choice.text;
         button.onclick = () => {
-          const effects = choice.getEffects();
+          const effects = choice.getEffects({ budget, reputation, security, morale });
           updateScores(effects);
-          if (budget === 0) return;
+          if (budget <= 0) return;
 
-          const scenarioIndex = scenarioOrder[currentScenarioIndex];
-          if (!completedScenarios.includes(scenarioIndex)) {
-            completedScenarios.push(scenarioIndex);
+          const scenarioIdx = scenarioOrder[currentScenarioIndex];
+          if (!completedScenarios.includes(scenarioIdx)) {
+            completedScenarios.push(scenarioIdx);
             saveGameState();
           }
 
           const outcomeText = choice.getOutcome();
-          document.getElementById("choices").innerHTML = "";
+          choicesDiv.innerHTML = "";
           document.getElementById("outcome-text").innerHTML = `<strong>You chose:</strong> ${choice.text}<br><br>${outcomeText}`;
           document.getElementById("next-btn").style.display = "block";
         };
