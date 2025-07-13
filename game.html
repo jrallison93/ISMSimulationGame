@@ -172,7 +172,7 @@
       if (saved) {
         ({ budget, reputation, security, morale, currentScenarioIndex, scenarioOrder, completedScenarios } = saved);
       } else {
-        budget = 500000;    // base budget in pounds
+        budget = 500000;
         reputation = 100;
         security = 100;
         morale = 100;
@@ -204,6 +204,7 @@
     }
 
     function updateScores(effects) {
+      // Clamp helper function
       const clamp = (val, max = Infinity) => Math.min(Math.max(0, val), max);
 
       const updateDisplay = (id, change, isCurrency = false) => {
@@ -246,13 +247,8 @@
     function showScenario(index) {
       if (budget <= 0) return;
 
-      while (index < scenarioOrder.length && completedScenarios.includes(scenarioOrder[index])) {
-        index++;
-        currentScenarioIndex = index;
-      }
-
       if (index >= scenarioOrder.length) {
-        // All scenarios completed, save final scores and redirect
+        // All scenarios completed
         localStorage.setItem("finalScores", JSON.stringify({ budget, reputation, security, morale }));
         window.location.href = "end.html";
         return;
@@ -274,12 +270,14 @@
           updateScores(effects);
           if (budget <= 0) return;
 
+          // Mark scenario as completed
           const scenarioIdx = scenarioOrder[currentScenarioIndex];
           if (!completedScenarios.includes(scenarioIdx)) {
             completedScenarios.push(scenarioIdx);
             saveGameState();
           }
 
+          // Show outcome and disable choices
           const outcomeText = choice.getOutcome();
           choicesDiv.innerHTML = "";
           document.getElementById("outcome-text").innerHTML = `<strong>You chose:</strong> ${choice.text}<br><br>${outcomeText}`;
@@ -290,12 +288,20 @@
     }
 
     function goToNextScenario() {
+      // Clear score changes display
       ["budget", "reputation", "security", "morale"].forEach(id => {
         const change = document.getElementById(`${id}-change`);
         change.textContent = "";
         change.className = "score-change";
       });
+
       currentScenarioIndex++;
+
+      // Skip any already completed scenarios to avoid repeats
+      while (currentScenarioIndex < scenarioOrder.length && completedScenarios.includes(scenarioOrder[currentScenarioIndex])) {
+        currentScenarioIndex++;
+      }
+
       saveGameState();
       showScenario(currentScenarioIndex);
     }
@@ -305,11 +311,21 @@
       document.getElementById("choices").innerHTML = "";
       document.getElementById("outcome-text").textContent = "";
       document.getElementById("next-btn").style.display = "none";
+
       document.getElementById("restart-btn").style.display = "block";
     }
 
     function restartGame() {
       localStorage.removeItem("ismGameState");
+      budget = 500000;
+      reputation = 100;
+      security = 100;
+      morale = 100;
+      currentScenarioIndex = 0;
+      scenarioOrder = shuffle([...Array(scenarios.length).keys()]);
+      completedScenarios = [];
+
+      saveGameState();
       initialiseGame();
     }
 
