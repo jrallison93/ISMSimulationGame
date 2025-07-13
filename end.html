@@ -23,7 +23,12 @@
     }
     .score {
       font-size: 1.2rem;
-      margin: 0.5rem 0;
+      margin: 0.5rem 0 0.2rem 0;
+    }
+    .commentary {
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 1.5rem;
     }
     button {
       margin-top: 2rem;
@@ -43,14 +48,43 @@
     <p>You’ve completed all the scenarios.</p>
 
     <div class="score" id="budget-score">Budget: </div>
+    <div class="commentary" id="budget-comment"></div>
+
     <div class="score" id="reputation-score">Reputation: </div>
+    <div class="commentary" id="reputation-comment"></div>
+
     <div class="score" id="security-score">Security: </div>
+    <div class="commentary" id="security-comment"></div>
+
     <div class="score" id="morale-score">Staff Morale: </div>
+    <div class="commentary" id="morale-comment"></div>
 
     <button onclick="window.location.href='index.html'">Play Again</button>
   </div>
 
   <script>
+    function formatCurrency(value) {
+      return "£" + value.toLocaleString('en-GB');
+    }
+
+    function getBudgetCommentary(budget) {
+      if (budget >= 700000) return "Excellent budget — strong financial backing.";
+      if (budget >= 550000) return "Good budget — sufficient resources available.";
+      if (budget >= 400000) return "Moderate budget — be cautious with spending.";
+      if (budget >= 250000) return "Low budget — consider reallocating resources.";
+      if (budget > 0) return "Critical budget — immediate action needed!";
+      return "No budget — game over!";
+    }
+
+    function getGeneralCommentary(score) {
+      if (score >= 150) return "Excellent performance in this area.";
+      if (score >= 120) return "Above average, keep it up.";
+      if (score >= 85) return "Average performance.";
+      if (score >= 35) return "Needs improvement.";
+      if (score >= 10) return "Critical condition.";
+      return "Failing — take immediate action!";
+    }
+
     const finalScores = JSON.parse(localStorage.getItem("finalScores")) || {
       budget: 0,
       reputation: 0,
@@ -58,10 +92,17 @@
       morale: 0
     };
 
-    document.getElementById("budget-score").textContent = "Budget: " + finalScores.budget;
+    document.getElementById("budget-score").textContent = "Budget: " + formatCurrency(finalScores.budget);
+    document.getElementById("budget-comment").textContent = getBudgetCommentary(finalScores.budget);
+
     document.getElementById("reputation-score").textContent = "Reputation: " + finalScores.reputation;
+    document.getElementById("reputation-comment").textContent = getGeneralCommentary(finalScores.reputation);
+
     document.getElementById("security-score").textContent = "Security: " + finalScores.security;
+    document.getElementById("security-comment").textContent = getGeneralCommentary(finalScores.security);
+
     document.getElementById("morale-score").textContent = "Staff Morale: " + finalScores.morale;
+    document.getElementById("morale-comment").textContent = getGeneralCommentary(finalScores.morale);
   </script>
 </body>
 </html>
