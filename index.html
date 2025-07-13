@@ -62,7 +62,13 @@
       box-sizing: border-box;
       white-space: nowrap;
     }
-    .budget .fill { background: #007bff; }
+    /* Budget now has no bar, just value and commentary */
+    .budget .value {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 5px;
+      color: #007bff;
+    }
     .reputation .fill { background: #ffc107; color: black; }
     .security .fill { background: #17a2b8; }
     .morale .fill { background: #6f42c1; }
@@ -85,7 +91,7 @@
 
       <div class="metric budget">
         <strong>Budget:</strong>
-        <div class="bar"><div class="fill" id="budget-bar"></div></div>
+        <div class="value" id="budget-value">£0</div>
         <div class="commentary" id="budget-comment"></div>
       </div>
 
@@ -114,20 +120,24 @@
 
   <script>
     const TOTAL_SCENARIOS = 6;
-    const MAX_VALUE = 200;
+    const MAX_VALUE = 200; // For reputation, security, morale
 
-    function loadGameState() {
-      const saved = localStorage.getItem("ismGameState");
-      if (saved) return JSON.parse(saved);
-      return {
-        budget: 100,
-        reputation: 100,
-        security: 100,
-        morale: 100,
-        completedScenarios: []
-      };
+    // Format number as £ with commas
+    function formatCurrency(value) {
+      return "£" + value.toLocaleString('en-GB');
     }
 
+    // Commentary scale for Budget (in £)
+    function getBudgetCommentary(budget) {
+      if (budget >= 700000) return "Excellent budget — strong financial backing.";
+      if (budget >= 550000) return "Good budget — sufficient resources available.";
+      if (budget >= 400000) return "Moderate budget — be cautious with spending.";
+      if (budget >= 250000) return "Low budget — consider reallocating resources.";
+      if (budget > 0) return "Critical budget — immediate action needed!";
+      return "No budget — game over!";
+    }
+
+    // Existing commentary scale for other metrics
     function getCommentary(score) {
       if (score >= 150) return "Excellent performance in this area.";
       if (score >= 120) return "Above average, keep it up.";
@@ -137,9 +147,26 @@
       return "Failing — take immediate action!";
     }
 
+    function loadGameState() {
+      const saved = localStorage.getItem("ismGameState");
+      if (saved) return JSON.parse(saved);
+      return {
+        budget: 500000,
+        reputation: 100,
+        security: 100,
+        morale: 100,
+        completedScenarios: []
+      };
+    }
+
     function updateBars() {
       const state = loadGameState();
 
+      // Update Budget: show formatted value and commentary only
+      document.getElementById("budget-value").textContent = formatCurrency(state.budget);
+      document.getElementById("budget-comment").textContent = getBudgetCommentary(state.budget);
+
+      // Update other metrics with bars
       const update = (id, value, commentId) => {
         const bar = document.getElementById(id);
         const widthPercent = Math.min((value / MAX_VALUE) * 100, 100);
@@ -148,7 +175,6 @@
         document.getElementById(commentId).textContent = getCommentary(value);
       };
 
-      update("budget-bar", state.budget, "budget-comment");
       update("reputation-bar", state.reputation, "reputation-comment");
       update("security-bar", state.security, "security-comment");
       update("morale-bar", state.morale, "morale-comment");
