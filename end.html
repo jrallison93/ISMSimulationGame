@@ -45,6 +45,7 @@
     <div class="score" id="budget-score">Budget: </div>
     <div class="score" id="reputation-score">Reputation: </div>
     <div class="score" id="security-score">Security: </div>
+    <div class="score" id="morale-score">Staff Morale: </div>
 
     <button onclick="window.location.href='index.html'">Play Again</button>
   </div>
@@ -53,12 +54,14 @@
     const finalScores = JSON.parse(localStorage.getItem("finalScores")) || {
       budget: 0,
       reputation: 0,
-      security: 0
+      security: 0,
+      morale: 0
     };
 
     document.getElementById("budget-score").textContent = "Budget: " + finalScores.budget;
     document.getElementById("reputation-score").textContent = "Reputation: " + finalScores.reputation;
     document.getElementById("security-score").textContent = "Security: " + finalScores.security;
+    document.getElementById("morale-score").textContent = "Staff Morale: " + finalScores.morale;
   </script>
 </body>
 </html>
