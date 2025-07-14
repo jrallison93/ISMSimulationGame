@@ -66,6 +66,19 @@
     button:hover {
       background: #b02a37;
     }
+
+    }
+    #home-btn {
+      background: #6c757d;
+      display: block;
+      margin-top: 1rem;
+      padding: 0.8rem;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
     p.empty {
       text-align: center;
       color: #888;
@@ -77,6 +90,8 @@
   <h1>Decision Log</h1>
   <div id="log-container"></div>
   <button id="clear-log-btn">Clear Log</button>
+  <button id="home-btn" onclick="goHome()">Return to Homepage</button>
+
 
   <script>
     function formatEffects(effects) {
@@ -86,6 +101,10 @@
       }).join('\n');
     }
 
+    function goHome() {
+      window.location.href = "index.html";
+    }
+    
     function renderLog() {
       const logContainer = document.getElementById('log-container');
       const decisionLog = JSON.parse(localStorage.getItem('decisionLog') || '[]');
