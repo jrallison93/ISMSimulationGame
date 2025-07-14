@@ -95,6 +95,26 @@
   <script>
     const scenarios = [
       {
+        text: "Your company is considering moving its data to a public cloud provider. What do you do?",
+        choices: [
+          {
+            text: "Migrate fully to the cloud with top-tier security options",
+            getEffects: () => ({ budget: -40000, reputation: +10, security: +15, morale: +5 }),
+            getOutcome: () => "The migration went smoothly and improved agility. Staff welcomed the move."
+          },
+          {
+            text: "Implement a hybrid cloud model",
+            getEffects: () => ({ budget: -20000, reputation: +5, security: +10, morale: +3 }),
+            getOutcome: () => "You maintained control over sensitive data while enjoying cloud flexibility."
+          },
+          {
+            text: "Stay on-premises due to compliance concerns",
+            getEffects: () => ({ budget: 0, reputation: -5, security: +5, morale: -2 }),
+            getOutcome: () => "While secure, the organisation fell behind competitors in innovation."
+          }
+        ]
+      },
+      {
         text: "Your company is facing increasing phishing attacks. What action do you take?",
         choices: [
           {
