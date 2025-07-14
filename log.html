@@ -47,8 +47,8 @@
       font-family: monospace;
       white-space: pre-wrap;
     }
-    button {
-      background: #dc3545;
+    #home-btn {
+      background: #6c757d;
       border: none;
       color: white;
       padding: 0.75rem 1.5rem;
@@ -63,21 +63,8 @@
       font-size: 1rem;
       transition: background-color 0.3s ease;
     }
-    button:hover {
-      background: #b02a37;
-    }
-
-    }
-    #home-btn {
-      background: #6c757d;
-      display: block;
-      margin-top: 1rem;
-      padding: 0.8rem;
-      border: none;
-      color: white;
-      font-size: 1rem;
-      border-radius: 5px;
-      cursor: pointer;
+    #home-btn:hover {
+      background: #5a6268;
     }
     p.empty {
       text-align: center;
@@ -89,9 +76,7 @@
 <body>
   <h1>Decision Log</h1>
   <div id="log-container"></div>
-  <button id="clear-log-btn">Clear Log</button>
   <button id="home-btn" onclick="goHome()">Return to Homepage</button>
-
 
   <script>
     function formatEffects(effects) {
@@ -104,7 +89,7 @@
     function goHome() {
       window.location.href = "index.html";
     }
-    
+
     function renderLog() {
       const logContainer = document.getElementById('log-container');
       const decisionLog = JSON.parse(localStorage.getItem('decisionLog') || '[]');
@@ -116,7 +101,7 @@
 
       logContainer.innerHTML = '';
 
-      decisionLog.forEach((entry, i) => {
+      decisionLog.forEach((entry) => {
         const div = document.createElement('div');
         div.className = 'log-entry';
 
@@ -131,13 +116,6 @@
         logContainer.appendChild(div);
       });
     }
-
-    document.getElementById('clear-log-btn').addEventListener('click', () => {
-      if (confirm('Are you sure you want to clear the decision log? This action cannot be undone.')) {
-        localStorage.removeItem('decisionLog');
-        renderLog();
-      }
-    });
 
     renderLog();
   </script>
