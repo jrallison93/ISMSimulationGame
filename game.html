@@ -303,6 +303,17 @@
           updateScores(effects);
           if (budget <= 0) return;
 
+          // Log the decision
+          const decisionLog = JSON.parse(localStorage.getItem('decisionLog') || '[]');
+            decisionLog.push({
+            scenario: scenario.text,
+            choice: choice.text,
+            outcome: choice.getOutcome(),
+            effects: effects,
+            timestamp: new Date().toISOString()
+          });
+          localStorage.setItem('decisionLog', JSON.stringify(decisionLog));
+
           if (!completedScenarios.includes(scenarioIdx)) {
             completedScenarios.push(scenarioIdx);
             saveGameState();
