@@ -91,6 +91,9 @@
 
     <button class="start-btn" id="start-btn">Start Scenario</button>
     <button class="reset-btn" onclick="resetGame()">Reset Game</button>
+    <a href="log.html" style="display: inline-block; margin-top: 1rem; text-decoration: none; color: #007bff;">
+  📜 View Decision Log </a>
+
 
     <div class="stats">
       <h3>Current Metrics</h3>
@@ -197,9 +200,11 @@
   function resetGame() {
     localStorage.removeItem("ismGameState");
     localStorage.removeItem("currentScenario");
+    localStorage.removeItem("decisionLog"); // clear decision log too
     updateBars();
-    alert("Game state has been reset.");
+    alert("Game state and decision log have been reset.");
   }
+
 
   document.getElementById('start-btn').addEventListener('click', () => {
     const state = loadGameState();
