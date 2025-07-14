@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ISM Game Decision Log</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f9f9f9;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .log-entry {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .timestamp {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+    .scenario {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .choice {
+      margin-bottom: 0.5rem;
+    }
+    .outcome {
+      font-style: italic;
+      color: #444;
+      margin-bottom: 0.5rem;
+    }
+    .effects {
+      background: #eef6ff;
+      border-radius: 5px;
+      padding: 0.5rem;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+    button {
+      background: #dc3545;
+      border: none;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 2rem;
+      display: block;
+      width: 100%;
+      max-width: 200px;
+      margin-left: auto;
+      margin-right: auto;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background: #b02a37;
+    }
+    p.empty {
+      text-align: center;
+      color: #888;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Decision Log</h1>
+  <div id="log-container"></div>
+  <button id="clear-log-btn">Clear Log</button>
+
+  <script>
+    function formatEffects(effects) {
+      return Object.entries(effects).map(([key, val]) => {
+        const sign = val >= 0 ? '+' : '';
+        return `${key}: ${sign}${val}`;
+      }).join('\n');
+    }
+
+    function renderLog() {
+      const logContainer = document.getElementById('log-container');
+      const decisionLog = JSON.parse(localStorage.getItem('decisionLog') || '[]');
+
+      if (!decisionLog.length) {
+        logContainer.innerHTML = '<p class="empty">No decisions logged yet.</p>';
+        return;
+      }
+
+      logContainer.innerHTML = '';
+
+      decisionLog.forEach((entry, i) => {
+        const div = document.createElement('div');
+        div.className = 'log-entry';
+
+        div.innerHTML = `
+          <div class="timestamp">🕒 ${new Date(entry.timestamp).toLocaleString()}</div>
+          <div class="scenario">Scenario: ${entry.scenario}</div>
+          <div class="choice">Your Choice: ${entry.choice}</div>
+          <div class="outcome">Outcome: ${entry.outcome}</div>
+          <pre class="effects">${formatEffects(entry.effects)}</pre>
+        `;
+
+        logContainer.appendChild(div);
+      });
+    }
+
+    document.getElementById('clear-log-btn').addEventListener('click', () => {
+      if (confirm('Are you sure you want to clear the decision log? This action cannot be undone.')) {
+        localStorage.removeItem('decisionLog');
+        renderLog();
+      }
+    });
+
+    renderLog();
+  </script>
+</body>
+</html>
