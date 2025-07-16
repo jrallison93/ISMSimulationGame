@@ -191,6 +191,11 @@
     };
   }
 
+function scaledSigmoid(x, midpoint = 110, steepness = 0.1) {
+  return 1 / (1 + Math.exp(-steepness * (x - midpoint)));
+}
+
+
   function calculateBoardHappiness(state) {
     // Example: Weighted importance of each metric (total must = 1.0)
     const weights = {
@@ -200,13 +205,13 @@
       morale: 0.20
     };
 
-    const normalised = {
-      budget: Math.max(0, Math.min(state.budget / 750000, 1)), // 0–£750,000 scale
-      reputation: Math.max(0, Math.min(state.reputation / 200, 1)),
-      security: Math.max(0, Math.min(state.security / 200, 1)),
-      morale: Math.max(0, Math.min(state.morale / 200, 1))
-    };
 
+const normalised = {
+    budget: Math.max(0, Math.min(state.budget / 750000, 1)), // 0–£750,000 scale
+    reputation: scaledSigmoid(Math.min(state.reputation, 200)),
+    security: scaledSigmoid(Math.min(state.security, 200)),
+    morale: scaledSigmoid(Math.min(state.morale, 200))
+  };
 
     const score = (
       weights.budget * normalised.budget +
