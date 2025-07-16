@@ -208,10 +208,6 @@
   return Math.round(score * 100); // Return percentage
 }
 
-   const happiness = calculateBoardHappiness(state);
-    document.getElementById("board-happiness").textContent = `Board Happiness: ${happiness}%`;
-
-
   function updateBars() {
     const state = loadGameState();
 
@@ -242,6 +238,9 @@
       startBtn.disabled = false;
       startBtn.textContent = "Start Scenario";
     }
+
+    const happiness = calculateBoardHappiness(state);
+    document.getElementById("board-happiness").textContent = `Board Happiness: ${happiness}%`;
   }
 
   function resetGame() {
