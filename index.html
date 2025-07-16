@@ -107,6 +107,7 @@
     <button class="reset-btn" onclick="resetGame()">Reset Game</button>
     <button class="log-btn" onclick="window.location.href='log.html'">Decision Log</button>
  <button class="about-btn" onclick="window.location.href='about.html'">About the Game</button>
+    
 
 
     <div class="stats">
@@ -118,6 +119,8 @@
         <div class="commentary" id="budget-comment"></div>
       </div>
 
+       <div id="board-happiness" style="font-weight: bold; margin-top: 1rem;">Board Happiness: 100%</div>
+      
       <div class="metric reputation">
         <strong>Reputation:</strong>
         <div class="bar"><div class="fill" id="reputation-bar"></div></div>
@@ -178,6 +181,36 @@
       completedScenarios: []
     };
   }
+
+  function calculateBoardHappiness(state) {
+    // Example: Weighted importance of each metric (total must = 1.0)
+    const weights = {
+      budget: 0.25,
+      reputation: 0.25,
+      security: 0.30,
+      morale: 0.20
+    };
+
+    const normalised = {
+      budget: Math.max(0, Math.min(state.budget / 100000, 1)), // assume 0–100k scale
+      reputation: (state.reputation + 100) / 200, // assuming reputation from -100 to +100
+      security: (state.security + 100) / 200,
+      morale: (state.morale + 100) / 200
+    };
+
+    const score = (
+      weights.budget * normalised.budget +
+      weights.reputation * normalised.reputation +
+      weights.security * normalised.security +
+      weights.morale * normalised.morale
+  );
+
+  return Math.round(score * 100); // Return percentage
+}
+
+   const happiness = calculateBoardHappiness(state);
+    document.getElementById("board-happiness").textContent = `Board Happiness: ${happiness}%`;
+
 
   function updateBars() {
     const state = loadGameState();
