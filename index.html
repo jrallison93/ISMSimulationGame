@@ -192,11 +192,12 @@
     };
 
     const normalised = {
-      budget: Math.max(0, Math.min(state.budget / 100000, 1)), // assume 0–100k scale
-      reputation: (state.reputation + 100) / 200, // assuming reputation from -100 to +100
-      security: (state.security + 100) / 200,
-      morale: (state.morale + 100) / 200
+      budget: Math.max(0, Math.min(state.budget / 750000, 1)), // 0–£750,000 scale
+      reputation: Math.max(0, Math.min(state.reputation / 200, 1)),
+      security: Math.max(0, Math.min(state.security / 200, 1)),
+      morale: Math.max(0, Math.min(state.morale / 200, 1))
     };
+
 
     const score = (
       weights.budget * normalised.budget +
