@@ -89,6 +89,12 @@
       margin-top: 5px;
       color: #007bff;
     }
+    .board-happiness .value {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 5px;
+      color: #20c997; /* a calm teal-green, feel free to change */
+    }
     .reputation .fill { background: #ffc107; color: black; }
     .security .fill { background: #17a2b8; }
     .morale .fill { background: #6f42c1; }
@@ -119,7 +125,11 @@
         <div class="commentary" id="budget-comment"></div>
       </div>
 
-       <div id="board-happiness" style="font-weight: bold; margin-top: 1rem;">Board Happiness: 100%</div>
+      <div class="metric board-happiness">
+        <strong>Board Happiness:</strong>
+        <div class="value" id="board-happiness-value">100%</div>
+        <div class="commentary" id="board-happiness-comment"></div>
+      </div>
       
       <div class="metric reputation">
         <strong>Reputation:</strong>
