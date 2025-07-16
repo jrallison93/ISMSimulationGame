@@ -115,6 +115,7 @@
         ]
       },
 {
+  
   text: "Your company is facing a surge in phishing attacks targeting staff across departments. Some phishing emails are highly convincing, and a few employees have clicked malicious links. No breach has occurred yet, but the risk is escalating. How do you respond?",
   choices: [
     {
@@ -127,9 +128,9 @@
             : { budget: -5000, reputation: +3, security: +5, morale: +1 },
       getOutcome: ({ security }) =>
         security < 80
-          ? "The training significantly improved staff awareness, especially among high-risk teams. Click-through rates on phishing tests dropped dramatically, and employee confidence increased.",
+          ? "The training significantly improved staff awareness, especially among high-risk teams. Click-through rates on phishing tests dropped dramatically, and employee confidence increased."
           : security <= 140
-            ? "The training reinforced existing habits and highlighted a few gaps. While most staff were already vigilant, a structured approach made phishing response more consistent.",
+            ? "The training reinforced existing habits and highlighted a few gaps. While most staff were already vigilant, a structured approach made phishing response more consistent."
             : "The training had limited new impact—staff were already highly aware. Some viewed it as redundant, but compliance metrics improved marginally."
     },
     {
@@ -142,9 +143,9 @@
             : { budget: 0, reputation: -4, security: -2, morale: -3 },
       getOutcome: ({ security }) =>
         security < 80
-          ? "The ongoing phishing attempts began to overwhelm less experienced staff. The absence of a clear response left employees feeling exposed, and some minor incidents damaged external trust.",
+          ? "The ongoing phishing attempts began to overwhelm less experienced staff. The absence of a clear response left employees feeling exposed, and some minor incidents damaged external trust."
           : security <= 140
-            ? "Though no immediate damage occurred, employees quietly questioned management’s priorities. A few raised concerns internally about feeling unsupported.",
+            ? "Though no immediate damage occurred, employees quietly questioned management’s priorities. A few raised concerns internally about feeling unsupported."
             : "With a strong existing posture, the decision caused little disruption—but missed an opportunity to show proactive leadership."
     },
     {
@@ -157,14 +158,13 @@
             : { budget: -25000, reputation: +10, security: +10, morale: 0 },
       getOutcome: ({ security }) =>
         security < 80
-          ? "The consultant implemented foundational controls—email filtering, staff protocols, and policy reforms. Staff appreciated the expert support, though some remained anxious.",
+          ? "The consultant implemented foundational controls—email filtering, staff protocols, and policy reforms. Staff appreciated the expert support, though some remained anxious."
           : security <= 140
-            ? "The consultant strengthened already decent defences. External stakeholders appreciated the investment, and morale lifted with the sense of professionalism.",
+            ? "The consultant strengthened already decent defences. External stakeholders appreciated the investment, and morale lifted with the sense of professionalism."
             : "The consultant found little to improve beyond fine-tuning existing measures. Leadership viewed it as a reputational move, but staff engagement was limited."
     }
   ]
 },
-
 
       {
         text: "Your company is facing increasing phishing attacks. What action do you take?",
