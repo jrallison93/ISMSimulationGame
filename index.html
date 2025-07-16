@@ -93,7 +93,7 @@
       font-weight: bold;
       font-size: 1.2rem;
       margin-top: 5px;
-      color: #20c997; /* a calm teal-green, feel free to change */
+      color: #20c997; /* a calm teal-green */
     }
     .reputation .fill { background: #ffc107; color: black; }
     .security .fill { background: #17a2b8; }
@@ -250,7 +250,7 @@
     }
 
     const happiness = calculateBoardHappiness(state);
-    document.getElementById("board-happiness").textContent = `Board Happiness: ${happiness}%`;
+    document.getElementById("board-happiness-value").textContent = `Board Happiness: ${happiness}%`;
   }
 
   function resetGame() {
