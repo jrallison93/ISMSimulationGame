@@ -125,7 +125,7 @@
       getEffects: ({ security }) =>
         security < 110
           ? { budget: -10000, reputation: +15, security: +12, morale: +8 }
-          : { budget: -5000, reputation: +5, security: +6, morale: +2 },
+          : { budget: -5000, reputation: +5, security: +6, morale: +2 }
       getOutcome: ({ security }) =>
         security < 110
           ? "The training was well-received and addressed major gaps in awareness. Staff became more confident in handling phishing threats, and internal risk assessments improved.",
@@ -136,7 +136,7 @@
       getEffects: ({ security }) =>
         security < 110
           ? { budget: 0, reputation: -20, security: -10, morale: -12 }
-          : { budget: 0, reputation: -6, security: -3, morale: -4 },
+          : { budget: 0, reputation: -6, security: -3, morale: -4 }
       getOutcome: ({ security }) =>
         security < 110
           ? "The absence of action led to growing frustration, especially after a phishing email nearly compromised a shared inbox. Morale declined, and questions were raised in leadership meetings.",
@@ -147,7 +147,7 @@
       getEffects: ({ security }) =>
         security < 110
           ? { budget: -25000, reputation: +12, security: +20, morale: +3 }
-          : { budget: -25000, reputation: +8, security: +10, morale: 0 },
+          : { budget: -25000, reputation: +8, security: +10, morale: 0 }
       getOutcome: ({ security }) =>
         security < 110
           ? "The consultant identified key weaknesses and quickly introduced targeted controls. The organisation saw meaningful improvements, and staff appreciated the expert support.",
