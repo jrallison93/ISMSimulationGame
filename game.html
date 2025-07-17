@@ -124,8 +124,8 @@
       text: "Invest in phishing simulation training",
       getEffects: ({ security }) =>
         security < 110
-          ? { budget: -10000, reputation: +15, security: +25, morale: +8 }
-          : { budget: -5000, reputation: +5, security: +8, morale: +2 },
+          ? { budget: -10000, reputation: +15, security: +12, morale: +8 }
+          : { budget: -5000, reputation: +5, security: +6, morale: +2 },
       getOutcome: ({ security }) =>
         security < 110
           ? "The training was well-received and addressed major gaps in awareness. Staff became more confident in handling phishing threats, and internal risk assessments improved.",
