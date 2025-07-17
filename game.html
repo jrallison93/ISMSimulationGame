@@ -136,6 +136,61 @@
   ]
 },
 
+
+
+{
+  text: "Your company is considering launching a comprehensive cybersecurity awareness campaign tailored for remote employees. The campaign aims to reduce risky behaviours like password sharing and unsecure Wi-Fi use, but it requires upfront investment and careful messaging to avoid employee pushback. How do you proceed?",
+  choices: [
+    {
+      text: "Launch an intensive, multimedia campaign with interactive training sessions.",
+      getEffects: ({ budget, morale }) => {
+        if (budget > 50000 && morale > 70) {
+          return { budget: -30000, reputation: +12, security: +20, morale: +8 };
+        } else if (budget > 50000) {
+          return { budget: -30000, reputation: +8, security: +15, morale: -5 };
+        } else {
+          return { budget: -10000, reputation: +2, security: +5, morale: 0 };
+        }
+      },
+      getOutcome: ({ budget, morale }) => {
+        if (budget > 50000 && morale > 70) {
+          return "The campaign energized your remote workforce and significantly boosted their cybersecurity habits, earning praise from clients and industry observers.";
+        } else if (budget > 50000) {
+          return "While the campaign improved security knowledge, some employees felt burdened by additional training requirements, causing mixed reactions.";
+        } else {
+          return "With limited resources, the campaign had a minimal effect, leaving some risky behaviours unaddressed.";
+        }
+      }
+    },
+    {
+      text: "Roll out a minimal, email-only awareness reminder.",
+      getEffects: ({ security }) => {
+        if (security < 50) {
+          return { budget: -2000, reputation: 0, security: +5, morale: +2 };
+        } else {
+          return { budget: -2000, reputation: 0, security: 0, morale: +3 };
+        }
+      },
+      getOutcome: ({ security }) => {
+        if (security < 50) {
+          return "The reminder helped curb some risky behaviour, though deeper issues remain.";
+        } else {
+          return "Employees appreciated the light touch, maintaining good morale without extra effort.";
+        }
+      }
+    },
+    {
+      text: "Postpone the campaign to focus budget on technical controls.",
+      getEffects: () => ({ budget: +10000, reputation: -8, security: +10, morale: -6 }),
+      getOutcome: () => "Technical upgrades enhanced your security posture, but the lack of employee engagement led to frustration and a dip in organisational reputation."
+    }
+  ]
+},
+
+
+
+
+
       {
         text: "With remote work now embedded in your organisational culture, the question of how to handle personal devices in the workplace (BYOD – Bring Your Own Device) has become increasingly urgent. While some staff appreciate the convenience and autonomy of using their own smartphones and laptops, your security team warns that uncontrolled devices increase the attack surface significantly. Legal and HR departments are also concerned about data protection, employee surveillance, and potential liability. You must decide on a BYOD policy that balances risk, cost, and morale across the organisation.",
   
