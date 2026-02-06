@@ -156,10 +156,9 @@
       getEffects: ({ budget }) => budget > 495000
         ? { budget: -25000, reputation: +10, security: +15, morale: +5 }
         : { budget: -25000, reputation: +5, security: +10, morale: +2 },
-      getOutcome: ({ budget }) => budget > 495000
-        ? "You successfully implement a robust MDM policy with adequate resourcing. The security team deploys controls smoothly, staff training is well supported, and the organisation benefits from both improved protection and sustained morale."
-        : "You implement the MDM policy but under financial constraints. Some controls are rolled out in phases and training is limited. Security improves, but staff remain cautious and the implementation feels partial."
-          }
+      getOutcome: () => 
+        "You successfully implement a robust MDM policy with adequate resourcing. The security team deploys controls smoothly, staff training is well supported, and the organisation benefits from both improved protection and sustained morale."
+         }
         ]
       },      
       {
