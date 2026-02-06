@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ISM Game Decision Log</title>
+
+  <!-- jsPDF library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -12,10 +16,12 @@
       max-width: 800px;
       margin: auto;
     }
+
     h1 {
       text-align: center;
       margin-bottom: 2rem;
     }
+
     .log-entry {
       background: white;
       border-radius: 8px;
@@ -23,23 +29,28 @@
       padding: 1rem 1.5rem;
       margin-bottom: 1.5rem;
     }
+
     .timestamp {
       font-size: 0.85rem;
       color: #666;
       margin-bottom: 0.5rem;
     }
+
     .scenario {
       font-weight: bold;
       margin-bottom: 0.5rem;
     }
+
     .choice {
       margin-bottom: 0.5rem;
     }
+
     .outcome {
       font-style: italic;
       color: #444;
       margin-bottom: 0.5rem;
     }
+
     .effects {
       background: #eef6ff;
       border-radius: 5px;
@@ -47,6 +58,7 @@
       font-family: monospace;
       white-space: pre-wrap;
     }
+
     #home-btn {
       background: #6c757d;
       border: none;
@@ -61,11 +73,22 @@
       margin-left: auto;
       margin-right: auto;
       font-size: 1rem;
-      transition: background-color 0.3s ease;
     }
-    #home-btn:hover {
-      background: #5a6268;
+
+    #download-btn {
+      background: #28a745;
+      border: none;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 1rem auto;
+      display: block;
+      width: 100%;
+      max-width: 200px;
+      font-size: 1rem;
     }
+
     p.empty {
       text-align: center;
       color: #888;
@@ -73,9 +96,13 @@
     }
   </style>
 </head>
+
 <body>
   <h1>Decision Log</h1>
+
   <div id="log-container"></div>
+
+  <button id="download-btn" onclick="downloadPDF()">Download PDF</button>
   <button id="home-btn" onclick="goHome()">Return to Homepage</button>
 
   <script>
@@ -115,6 +142,56 @@
 
         logContainer.appendChild(div);
       });
+    }
+
+    async function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const decisionLog = JSON.parse(localStorage.getItem('decisionLog') || '[]');
+
+      if (!decisionLog.length) {
+        alert("No decisions to export.");
+        return;
+      }
+
+      const doc = new jsPDF();
+      let y = 20;
+
+      doc.setFontSize(16);
+      doc.text("ISM Game Decision Log", 20, y);
+      y += 10;
+
+      doc.setFontSize(10);
+
+      decisionLog.forEach((entry, index) => {
+        const timestamp = new Date(entry.timestamp).toLocaleString();
+
+        const block = [
+          `Decision ${index + 1}`,
+          `Time: ${timestamp}`,
+          `Scenario: ${entry.scenario}`,
+          `Choice: ${entry.choice}`,
+          `Outcome: ${entry.outcome}`,
+          `Effects: ${formatEffects(entry.effects)}`,
+          " "
+        ];
+
+        block.forEach(line => {
+          const split = doc.splitTextToSize(line, 170);
+
+          split.forEach(l => {
+            if (y > 280) {
+              doc.addPage();
+              y = 20;
+            }
+            doc.text(l, 20, y);
+            y += 6;
+          });
+        });
+
+        y += 4;
+      });
+
+      doc.save("ISM_Decision_Log.pdf");
     }
 
     renderLog();
