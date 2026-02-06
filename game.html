@@ -156,11 +156,12 @@
       getEffects: ({ budget }) => budget > 495000
         ? { budget: -25000, reputation: +10, security: +15, morale: +5 }
         : { budget: -25000, reputation: +5, security: +10, morale: +2 },
-      getOutcome: () =>
-        "You invest in a comprehensive Mobile Device Management (MDM) system that allows you to monitor, encrypt, and control access on personal devices without violating staff privacy. While some employees are initially wary of management's control over their devices, your transparent communication and opt-out clauses reassure most of the workforce. The policy strikes a pragmatic balance: security risk is meaningfully reduced, staff productivity remains high, and your organisation is commended in a sector briefing for proactive digital governance."
+      getOutcome: ({ budget }) => budget > 495000
+        ? "You successfully implement a robust MDM policy with adequate resourcing. The security team deploys controls smoothly, staff training is well supported, and the organisation benefits from both improved protection and sustained morale."
+        : "You implement the MDM policy but under financial constraints. Some controls are rolled out in phases and training is limited. Security improves, but staff remain cautious and the implementation feels partial."
           }
         ]
-      },
+      },      
       {
         text: "Your company has been hit with a ransomware attack. What is your immediate response?",
         choices: [
