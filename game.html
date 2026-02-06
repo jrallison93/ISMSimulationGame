@@ -114,6 +114,29 @@
           }
         ]
       },
+
+
+      {
+  text: "A zero-day vulnerability has been disclosed in software widely used across your organisation. Patches are not yet available. How do you respond?",
+  choices: [
+    {
+      text: "Isolate vulnerable systems and restrict access",
+      getEffects: () => ({ budget: -15000, reputation: +5, security: +15, morale: -5 }),
+      getOutcome: () => "Operations slow slightly but risk exposure is reduced. Leadership appreciates the precautionary approach."
+    },
+    {
+      text: "Continue operations and monitor vendor guidance",
+      getEffects: () => ({ budget: 0, reputation: -5, security: -10, morale: +2 }),
+      getOutcome: () => "Short-term productivity remains high, but the security team is uneasy about the exposure window."
+    },
+    {
+      text: "Deploy temporary compensating controls and communicate to staff",
+      getEffects: () => ({ budget: -8000, reputation: +8, security: +10, morale: +3 }),
+      getOutcome: () => "The organisation responds in a balanced and transparent manner, improving trust internally and externally."
+    }
+  ]
+},
+
  
 {
   text: "Your company is facing a surge in phishing attacks targeting staff across departments. Some phishing emails are highly convincing, and a few employees have clicked malicious links. No breach has occurred yet, but the risk is escalating. How do you respond?",
