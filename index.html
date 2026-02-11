@@ -249,7 +249,12 @@ const normalised = {
     if (completedCount >= TOTAL_SCENARIOS) {
       startBtn.disabled = true;
       startBtn.textContent = "All Scenarios Completed";
-    } else {
+    } 
+    else if (completedCount > 0) {
+      startBtn.disabled = false;
+      startBtn.textContent = "Continue Scenario";
+    }
+    else {
       startBtn.disabled = false;
       startBtn.textContent = "Start Scenario";
     }
