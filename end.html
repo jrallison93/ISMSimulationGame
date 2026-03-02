@@ -40,6 +40,12 @@
       color: white;
       cursor: pointer;
     }
+
+   button:disabled {
+      background-color: #6c757d;
+      cursor: not-allowed;
+      opacity: 0.7;
+  }
   </style>
 </head>
 <body>
@@ -60,7 +66,7 @@
     <div class="commentary" id="morale-comment"></div>
     <div class="commentary" id="email-status"></div>
 
-    <button onclick="window.location.href='index.html'">Play Again</button>
+    <button id="play-again-btn" onclick="window.location.href='index.html'">Play Again</button>
   </div>
 
   <script>
@@ -116,10 +122,14 @@ function generateRunId() {
 
 function sendDecisionLogPdfOnCompletion() {
   const statusEl = document.getElementById("email-status");
+  const playAgainBtn = document.getElementById("play-again-btn");
+
+  if (playAgainBtn) playAgainBtn.disabled = true;
 
   const alreadySentAt = localStorage.getItem("decisionLogSentAt");
   if (alreadySentAt) {
     if (statusEl) statusEl.textContent = "Decision log already submitted.";
+    if (playAgainBtn) playAgainBtn.disabled = false;
     return;
   }
 
@@ -127,9 +137,10 @@ function sendDecisionLogPdfOnCompletion() {
   const finalScores = JSON.parse(localStorage.getItem("finalScores") || "{}");
 
   if (!decisionLog.length) {
-  if (statusEl) statusEl.textContent = "No decision log found to submit.";
-  return;
- }
+    if (statusEl) statusEl.textContent = "No decision log found to submit.";
+    if (playAgainBtn) playAgainBtn.disabled = false;
+    return;
+  }
 
   const runId = localStorage.getItem("decisionLogRunId") || generateRunId();
   localStorage.setItem("decisionLogRunId", runId);
@@ -153,12 +164,13 @@ function sendDecisionLogPdfOnCompletion() {
   .then(() => {
     localStorage.setItem("decisionLogSentAt", new Date().toISOString());
     if (statusEl) statusEl.textContent = "Decision log submitted.";
+    if (playAgainBtn) playAgainBtn.disabled = false;
   })
   .catch(() => {
     if (statusEl) statusEl.textContent = "Could not submit decision log. Please check connection and refresh.";
+    if (playAgainBtn) playAgainBtn.disabled = false;
   });
 }
-
 sendDecisionLogPdfOnCompletion();
   </script>
 </body>
