@@ -58,6 +58,7 @@
 
     <div class="score" id="morale-score">Staff Morale: </div>
     <div class="commentary" id="morale-comment"></div>
+    <div class="commentary" id="email-status"></div>
 
     <button onclick="window.location.href='index.html'">Play Again</button>
   </div>
@@ -103,6 +104,62 @@
 
     document.getElementById("morale-score").textContent = "Staff Morale: " + finalScores.morale;
     document.getElementById("morale-comment").textContent = getGeneralCommentary(finalScores.morale);
+
+
+// Decision log auto-email 
+const DECISION_LOG_EMAIL_ENDPOINT = "https://script.google.com/macros/s/AKfycbweyyfcAmjnxd7g9YsTmhRA-HPezmyG0dIhkZEIeItRcsgUSsuk6chgcVuzPWBygIzW/exec";
+const DECISION_LOG_SECRET = "CyberSecSim!log#2026";
+
+function generateRunId() {
+  return "run_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+}
+
+function sendDecisionLogPdfOnCompletion() {
+  const statusEl = document.getElementById("email-status");
+
+  const alreadySentAt = localStorage.getItem("decisionLogSentAt");
+  if (alreadySentAt) {
+    if (statusEl) statusEl.textContent = "Decision log already submitted.";
+    return;
+  }
+
+  const decisionLog = JSON.parse(localStorage.getItem("decisionLog") || "[]");
+  const finalScores = JSON.parse(localStorage.getItem("finalScores") || "{}");
+
+  if (!decisionLog.length) {
+  if (statusEl) statusEl.textContent = "No decision log found to submit.";
+  return;
+ }
+
+  const runId = localStorage.getItem("decisionLogRunId") || generateRunId();
+  localStorage.setItem("decisionLogRunId", runId);
+
+  const payload = {
+    secret: DECISION_LOG_SECRET,
+    sent_at: new Date().toISOString(),
+    run_id: runId,
+    finalScores: finalScores,
+    decisionLog: decisionLog
+  };
+
+  if (statusEl) statusEl.textContent = "Submitting decision log...";
+
+  fetch(DECISION_LOG_EMAIL_ENDPOINT, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  })
+  .then(() => {
+    localStorage.setItem("decisionLogSentAt", new Date().toISOString());
+    if (statusEl) statusEl.textContent = "Decision log submitted.";
+  })
+  .catch(() => {
+    if (statusEl) statusEl.textContent = "Could not submit decision log. Please check connection and refresh.";
+  });
+}
+
+sendDecisionLogPdfOnCompletion();
   </script>
 </body>
 </html>

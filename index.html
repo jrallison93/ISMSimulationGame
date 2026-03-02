@@ -252,7 +252,7 @@ const normalised = {
       resetBtn.title = "";
     } else {
       resetBtn.disabled = true;
-      resetBtn.title = "Reset is Available After You Complete All Scenarios.";
+      resetBtn.title = "Reset is available after you complete all scenarios";
   }
     const progressText = `${completedCount} of ${TOTAL_SCENARIOS} scenarios completed.`;
     document.getElementById("progress-text").textContent = completedCount > 0 ? progressText : "You haven't started the game yet.";
@@ -281,10 +281,12 @@ const normalised = {
     const completedCount = Array.isArray(state.completedScenarios) ? state.completedScenarios.length : 0;
     // prevent reset button if someone tries to reset from the console before completing all scenarios
     if (completedCount < TOTAL_SCENARIOS) {
-    alert("You can reset the game after completing all scenarios.");
+    alert("You can reset the game after completing all scenarios");
     return;
     }
-
+    localStorage.removeItem("finalScores");
+    localStorage.removeItem("decisionLogSentAt");
+    localStorage.removeItem("decisionLogRunId");
     localStorage.removeItem("ismGameState");
     localStorage.removeItem("currentScenario");
     localStorage.removeItem("decisionLog"); // clear decision log too
