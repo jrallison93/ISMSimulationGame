@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: auto;
+      margin: 0;
       padding: 2rem;
       /* Set background image from GitHub */
       background-image: url('https://raw.githubusercontent.com/jrallison93/ISMSimulationGame/e4614d3bb65ef594d18ead707c7205233af3309f/Background.jpg');
@@ -18,32 +18,56 @@
     }
     h1, h2 {
       text-align: center;
+      margin-top: 0;
     }
     .section {
       background: white;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.10);
       padding: 1.5rem;
-      margin-bottom: 2rem;
+      margin: 0 auto 1.2rem auto;
+      max-width: 650px;
+    }
+    /* Improve text readability */
+    p, li {
+      color: #333;
+      line-height: 1.55;
+    }
+    ul {
+      padding-left: 1.2rem;  
+    }
+    /* Make the metrics list look tidy */
+    .section ul {
+      margin: 0.8rem 0 0 0;
+    }
+
+    .section li {
+      margin-bottom: 0.6rem;
+    }
+    /* Make the metric name stand out a little */
+    .section li strong {
+    color: #111;
     }
     #home-btn {
       background: #6c757d;
       border: none;
       color: white;
-      padding: 0.75rem 1.5rem;
-      border-radius: 5px;
+      padding: 0.85rem 1.2rem;
+      border-radius: 8px;
       cursor: pointer;
-      margin-top: 2rem;
       display: block;
       width: 100%;
       max-width: 200px;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 1.4rem auto 0 auto;
       font-size: 1rem;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.25s ease, transform 0.12s ease;
     }
     #home-btn:hover {
-      background: #5a6268;
+       background: #5a6268;
+       transform: translateY(-1px);
+    }
+    #home-btn:active {
+       transform: translateY(0);
     }
   </style>
 </head>
