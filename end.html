@@ -85,24 +85,25 @@
     <p>You’ve completed all the scenarios.</p>
 
     <div class="results">
-    <div class="score" id="budget-score">Budget: </div>
-    <div class="commentary" id="budget-comment"></div>
+      <div class="score" id="budget-score">Budget: </div>
+      <div class="commentary" id="budget-comment"></div>
 
-    <div class="score" id="reputation-score">Reputation: </div>
-    <div class="commentary" id="reputation-comment"></div>
+      <div class="score" id="reputation-score">Reputation: </div>
+      <div class="commentary" id="reputation-comment"></div>
 
-    <div class="score" id="security-score">Security: </div>
-    <div class="commentary" id="security-comment"></div>
+      <div class="score" id="security-score">Security: </div>
+      <div class="commentary" id="security-comment"></div>
 
-    <div class="score" id="morale-score">Staff Morale: </div>
-    <div class="commentary" id="morale-comment"></div>
+      <div class="score" id="morale-score">Staff Morale: </div>
+      <div class="commentary" id="morale-comment"></div>
 
-    <div class="commentary" id="email-status"></div>
+      <div class="commentary" id="email-status"></div>
   </div>
     <button id="play-again-btn" onclick="window.location.href='index.html'">Play Again</button>
   </div>
 
   <script>
+    localStorage.removeItem("resultsPending"); // Clear the flag since results are now being viewed
     function formatCurrency(value) {
       return "£" + value.toLocaleString('en-GB');
     }
@@ -167,7 +168,6 @@ function sendDecisionLogPdfOnCompletion() {
   }
 
   const decisionLog = JSON.parse(localStorage.getItem("decisionLog") || "[]");
-  const finalScores = JSON.parse(localStorage.getItem("finalScores") || "{}");
 
   if (!decisionLog.length) {
     if (statusEl) statusEl.textContent = "No decision log found to submit.";

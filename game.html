@@ -134,6 +134,12 @@
     #next-btn:hover { 
       background: #218838; 
     }
+    #next-btn.final-btn {
+     display: block;
+     width: 100%;
+     max-width: 320px;
+     margin: 1.2rem auto;
+    }
     #restart-btn {
       background: #dc3545;
     }
@@ -422,6 +428,7 @@
       document.getElementById("outcome-text").textContent = "";
       document.getElementById("next-btn").style.display = "none";
       document.getElementById("next-btn").textContent = "Next Scenario";
+      document.getElementById("home-btn").style.display = "inline-block";
       document.getElementById("scenario-text").textContent = scenario.text;
 
       // Update progress bar
@@ -454,6 +461,11 @@
             saveGameState();
             updateProgress();
           }
+          // Save final results as soon as the last scenario is answered
+          if (completedScenarios.length >= scenarioOrder.length) {
+            localStorage.setItem("finalScores", JSON.stringify({ budget, reputation, security, morale }));
+            localStorage.setItem("resultsPending", "1"); // results exist, but user hasn’t viewed them yet
+          }
 
           const outcomeText = choice.getOutcome();
           choicesDiv.innerHTML = "";
@@ -461,12 +473,23 @@
           document.getElementById("outcome-text").innerHTML = `<strong>You chose:</strong> ${choice.text}<br><br>${outcomeText}`;
 
           const nextBtn = document.getElementById("next-btn");
+          const homeBtn = document.getElementById("home-btn");
+
           if (completedScenarios.length >= scenarioOrder.length) {
-            nextBtn.textContent = "View Results";
+          nextBtn.textContent = "View Results";
+          homeBtn.style.display = "none";
+          nextBtn.classList.add("final-btn");
           } else {
-            nextBtn.textContent = "Next Scenario";
-          }
+          nextBtn.textContent = "Next Scenario";
+          nextBtn.classList.remove("final-btn");
+      }
+
+          if (completedScenarios.length >= scenarioOrder.length) {
+          nextBtn.style.display = "block";
+          } else {
           nextBtn.style.display = "inline-block";
+          }
+         
         };
         choicesDiv.appendChild(button);
       });
@@ -499,6 +522,7 @@
 
     function restartGame() {
       localStorage.removeItem("ismGameState");
+      localStorage.removeItem("resultsPending");
       resetGameState();
       saveGameState();
       initialiseGame();
