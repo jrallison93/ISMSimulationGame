@@ -66,6 +66,7 @@
 
       {
         text: "With remote work now embedded in your organisational culture, the question of how to handle personal devices in the workplace (BYOD – Bring Your Own Device) has become increasingly urgent. While some staff appreciate the convenience and autonomy of using their own smartphones and laptops, your security team warns that uncontrolled devices increase the attack surface significantly. Legal and HR departments are also concerned about data protection, employee surveillance, and potential liability. You must decide on a BYOD policy that balances risk, cost, and morale across the organisation.",
+        image: "https://raw.githubusercontent.com/jrallison93/ISMSimulationGame/03e257b95c568e0c8805df470eab4733b501b490/Test.jpg",
         choices: [
           {
             text: "Ban BYOD entirely",

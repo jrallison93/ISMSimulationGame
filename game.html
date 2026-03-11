@@ -109,16 +109,20 @@
     }
     .scenario-image-box {
       width: 100%;
-      min-height: 220px;
       margin: 1.2rem 0 1.5rem 0;
-      border: 2px dashed #d6d6d6;
-      border-radius: 10px;
-      background: #fafafa;
       display: flex;
-      align-items: center;
       justify-content: center;
-      color: #666;
-      font-size: 1rem;
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
+    .scenario-image-box img {
+      max-width: 640px;
+      max-height: 300px;
+      width: auto;
+      height: auto;
+      display: block;
+      border-radius: 12px;
     }
     .score-change {
       display: block;
@@ -414,11 +418,20 @@
       }
 
       const scenario = scenarios[scenarioIdx];
+      const imageBox = document.getElementById("scenario-image-box"); // get the image box element
+
       document.getElementById("outcome-text").textContent = "";
       document.getElementById("next-btn").style.display = "none";
       document.getElementById("log-btn").style.display = "none";
       document.getElementById("next-btn").textContent = "Next Scenario";
       document.getElementById("home-btn").style.display = "inline-block";
+
+      // Update scenario text and image
+      if (scenario.image) {
+        imageBox.innerHTML = `<img src="${scenario.image}" alt="Scenario image">`; 
+      } else {
+        imageBox.textContent = "Scenario Image"; 
+      }
       document.getElementById("scenario-text").textContent = scenario.text;
 
       // Update progress bar
