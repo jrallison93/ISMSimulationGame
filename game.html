@@ -18,29 +18,29 @@
       padding: 2rem;
       border-radius: 10px;
       box-shadow: 0 6px 18px rgba(0,0,0,0.10);
-  }
+    }
     .progress-wrap {
       margin-bottom: 1.2rem;
-  }
+    }
     .progress-label {
       font-size: 0.95rem;
       font-weight: bold;
       color: #444;
       margin-bottom: 0.4rem;
-  }
-  .progress-bar {
+    }
+    .progress-bar {
       height: 12px;
       background: #e9ecef;
       border-radius: 999px;
       overflow: hidden;
-  }
-  .progress-fill {
-     height: 100%;
-     width: 0%;
-     background: #b9a3e3;
-     border-radius: 999px;
-     transition: width 0.3s ease;
-  }
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #b9a3e3;
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
     .scenario {
       margin-bottom: 1.5rem;
       font-size: 1.05rem;
@@ -48,11 +48,11 @@
       color: #111;
     }
     #scenario-text { /* long scenario text to paragraph style */
-        max-width: 65ch;      
-        margin: 0 auto 1.5rem auto; 
-        text-align: justify; 
-        text-justify: inter-word;   
-        line-height: 1.75;
+      max-width: 65ch;      
+      margin: 0 auto 1.5rem auto; 
+      text-align: justify; 
+      text-justify: inter-word;   
+      line-height: 1.75;
     }
     .choices button {
       display: block;
@@ -81,15 +81,49 @@
     }
     .scores {
       margin-top: 1.2rem;
-      border-top: 1px solid #eee;
+      margin-bottom: 1.5rem;
       padding-top: 0.8rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.8rem;
     }
-    .scores h3 {
-      margin-top: 0;
-  }
-    .score-change {
+    .score-card {
+      background: #f8fbff;
+      border: 1px solid #e6eefc;
+      border-radius: 10px;
+      padding: 0.9rem 0.8rem;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    .score-label {
       font-size: 0.9rem;
-      margin-left: 10px;
+      font-weight: bold;
+      color: #555;
+      margin-bottom: 0.4rem;
+    }
+    .score-value {
+      font-size: 1.15rem;
+      font-weight: bold;
+      color: #111;
+      margin-bottom: 0.25rem;
+    }
+    .scenario-image-box {
+      width: 100%;
+      min-height: 220px;
+      margin: 1.2rem 0 1.5rem 0;
+      border: 2px dashed #d6d6d6;
+      border-radius: 10px;
+      background: #fafafa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      font-size: 1rem;
+    }
+    .score-change {
+      display: block;
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
     }
     .score-change.positive {
       color: green;
@@ -112,22 +146,20 @@
     }
     .outcome strong {
       color: #111;
-  }
-    #next-btn, #restart-btn, #home-btn {
-      margin-top: 0.8rem;
-      padding: 0.85rem 1.1rem;
+    }
+    #next-btn, #restart-btn, #home-btn, #log-btn, #about-btn {
+      width: 220px;
+      padding: 0.85rem 1rem;
       border: none;
       color: white;
       font-size: 1rem;
       border-radius: 8px;
       cursor: pointer;
-      width: 48%;
-      max-width: 260px;
       display: none;
+      white-space: nowrap;
     }
     #next-btn {
       background: #28a745;
-      margin-left: 4%;
       margin-top: 1.2rem;
       margin-bottom: 1.2rem;
     }
@@ -135,16 +167,31 @@
       background: #218838; 
     }
     #next-btn.final-btn {
-     display: block;
-     width: 100%;
-     max-width: 320px;
-     margin: 1.2rem auto;
+      margin-top: 1.2rem;
+      margin-bottom: 1.2rem;
     }
     #restart-btn {
       background: #dc3545;
     }
     #restart-btn:hover { 
       background: #c82333; 
+    }
+    #log-btn {
+      background: #007bff;
+      margin-top: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+    #log-btn:hover {
+      background: #0056b3;
+    }
+    #about-btn {
+      background: #17a2b8;
+      display: inline-block;
+      margin-top: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+    #about-btn:hover {
+      background: #117a8b;
     }
     #home-btn {
       background: #6c757d;
@@ -155,16 +202,35 @@
     #home-btn:hover {
       background: #5a6268;
     }
+    .button-row {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+    }
+    .primary-buttons {
+      margin-top: 1rem;
+    }
+    .secondary-buttons {
+      margin-top: 0.8rem;
+    }
     /* Mobile: stack the main buttons */
     @media (max-width: 600px) {
-    #next-btn,
-    #home-btn {
-     width: 100%;
-     max-width: 320px;
-     margin: 0.8rem auto;
-      }
+    .button-row {
+      flex-direction: column;
+      align-items: center;
     }
-
+    #next-btn, #restart-btn, #home-btn, #log-btn, #about-btn {
+      width: 100%;
+      max-width: 320px;
+      margin: 0.8rem auto;
+    }
+    .scores {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .score-card {
+      padding: 0.8rem 0.6rem;
+    }
+  }
   </style>
 </head>
 <body>
@@ -177,22 +243,54 @@
    </div>
   </div>
 
+  <!-- move metrics to the top -->
+  <div class="scores">
+    <div class="score-card">
+    <div class="score-label">Budget</div>
+    <div class="score-value" id="budget">£500,000</div>
+    <div class="score-change" id="budget-change"></div>
+  </div>
+
+  <div class="score-card">
+    <div class="score-label">Reputation</div>
+    <div class="score-value" id="reputation">100</div>
+    <div class="score-change" id="reputation-change"></div>
+  </div>
+
+  <div class="score-card">
+    <div class="score-label">Security</div>
+    <div class="score-value" id="security">100</div>
+    <div class="score-change" id="security-change"></div>
+  </div>
+
+  <div class="score-card">
+    <div class="score-label">Staff Morale</div>
+    <div class="score-value" id="morale">100</div>
+    <div class="score-change" id="morale-change"></div>
+  </div>
+</div>
+
+<!-- add scenario image box -->
+  <div class="scenario-image-box" id="scenario-image-box">
+      Scenario Image
+  </div>
+  
     <div class="scenario" id="scenario-text"></div>
     <div class="choices" id="choices"></div>
     <div class="outcome" id="outcome-text"></div>
-    <button id="next-btn" onclick="goToNextScenario()">Next Scenario</button>
-    <button id="restart-btn" onclick="restartGame()">Restart Game</button>
-    <button id="home-btn" onclick="goHome()">Return to Homepage</button>
 
-    <div class="scores">
-      <h3>Scores</h3>
-      <p>Budget: <span id="budget">£500,000</span><span class="score-change" id="budget-change"></span></p>
-      <p>Reputation: <span id="reputation">100</span><span class="score-change" id="reputation-change"></span></p>
-      <p>Security: <span id="security">100</span><span class="score-change" id="security-change"></span></p>
-      <p>Staff Morale: <span id="morale">100</span><span class="score-change" id="morale-change"></span></p>
-    </div>
-  </div>
+ <div class="button-row primary-buttons">
+  <button id="next-btn" onclick="goToNextScenario()">Next Scenario</button>
+  <button id="restart-btn" onclick="restartGame()">Restart Game</button>
+  <button id="log-btn" onclick="goToLog()">View Decision Log</button>
+ </div>
 
+ <div class="button-row secondary-buttons">
+  <button id="home-btn" onclick="goHome()">Return to Homepage</button>
+  <button id="about-btn" onclick="goToAbout()">About the Game</button>
+ </div>
+</div>
+  
   <!-- Load scenarios from external file -->
   <script src="scenario-bank.js"></script>
 
@@ -318,6 +416,7 @@
       const scenario = scenarios[scenarioIdx];
       document.getElementById("outcome-text").textContent = "";
       document.getElementById("next-btn").style.display = "none";
+      document.getElementById("log-btn").style.display = "none";
       document.getElementById("next-btn").textContent = "Next Scenario";
       document.getElementById("home-btn").style.display = "inline-block";
       document.getElementById("scenario-text").textContent = scenario.text;
@@ -365,6 +464,7 @@
 
           const nextBtn = document.getElementById("next-btn");
           const homeBtn = document.getElementById("home-btn");
+          const logBtn = document.getElementById("log-btn");
 
           if (completedScenarios.length >= scenarioOrder.length) {
           nextBtn.textContent = "View Results";
@@ -380,6 +480,7 @@
           } else {
           nextBtn.style.display = "inline-block";
           }
+          logBtn.style.display = "inline-block";
          
         };
         choicesDiv.appendChild(button);
@@ -421,6 +522,14 @@
 
     function goHome() {
       window.location.href = "index.html";
+    }
+
+    function goToLog() {
+      window.location.href = "log.html";
+    }
+
+    function goToAbout() {
+      window.location.href = "about.html";
     }
 
     initialiseGame();
