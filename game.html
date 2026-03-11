@@ -9,7 +9,13 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 2rem;
-      background-color: #f4f4f4;
+      background-image: linear-gradient(rgba(240, 240, 240, 0.55), rgba(240, 240, 240, 0.55)),
+                    url('https://raw.githubusercontent.com/jrallison93/ISMSimulationGame/135b5d0ed2766f0e8618834fa2bb1d6972ca7acb/Background-Homepage.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+     
     }
     .container {
       max-width: 700px; /* a bit wider helps long scenarios */
@@ -110,7 +116,7 @@
     .scenario-image-box {
       width: 100%;
       margin: 1.2rem 0 1.5rem 0;
-      display: flex;
+      display: none;
       justify-content: center;
       background: transparent;
       border: none;
@@ -275,9 +281,7 @@
 </div>
 
 <!-- add scenario image box -->
-  <div class="scenario-image-box" id="scenario-image-box">
-      Scenario Image
-  </div>
+  <div class="scenario-image-box" id="scenario-image-box"></div>
   
     <div class="scenario" id="scenario-text"></div>
     <div class="choices" id="choices"></div>
@@ -428,9 +432,11 @@
 
       // Update scenario text and image
       if (scenario.image) {
+        imageBox.style.display = "flex";
         imageBox.innerHTML = `<img src="${scenario.image}" alt="Scenario image">`; 
       } else {
-        imageBox.textContent = "Scenario Image"; 
+        imageBox.style.display = "none";
+        imageBox.innerHTML = "";
       }
       document.getElementById("scenario-text").textContent = scenario.text;
 
