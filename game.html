@@ -247,7 +247,7 @@
   <div class="container">
 
   <div class="progress-wrap">
-    <div class="progress-label" id="progress-label">Progress: 0 / 5</div>
+    <div class="progress-label" id="progress-label">Progress:</div>
     <div class="progress-bar">
     <div class="progress-fill" id="progress-fill"></div>
    </div>
@@ -309,11 +309,45 @@
 
     function loadGameState() {
       const saved = JSON.parse(localStorage.getItem("ismGameState"));
-      if (saved) {
-        ({ budget, reputation, security, morale, currentScenarioIndex, scenarioOrder, completedScenarios } = saved);
-      } else {
-        resetGameState();
-      }
+        if (!saved) {
+          resetGameState();
+          return;
+        }
+
+        budget = saved.budget ?? 500000;
+        reputation = saved.reputation ?? 100;
+        security = saved.security ?? 100;
+        morale = saved.morale ?? 100;
+
+        const allIds = [...Array(scenarios.length).keys()];
+
+        const savedOrder = Array.isArray(saved.scenarioOrder)
+          ? saved.scenarioOrder.filter((id) => allIds.includes(id))
+          : [];
+
+        const uniqueSavedOrder = [...new Set(savedOrder)];
+
+        const missingIds = allIds.filter((id) => !uniqueSavedOrder.includes(id));
+
+        scenarioOrder = uniqueSavedOrder
+          .concat(missingIds)
+          .slice(0, scenariosPerRun);
+
+        completedScenarios = Array.isArray(saved.completedScenarios)
+          ? saved.completedScenarios.filter((id) => scenarioOrder.includes(id))
+          : [];
+
+        const nextIncompleteIndex = scenarioOrder.findIndex(
+          (id) => !completedScenarios.includes(id)
+        );
+
+        if (nextIncompleteIndex === -1) {
+          currentScenarioIndex = scenarioOrder.length;
+        } else {
+          currentScenarioIndex = nextIncompleteIndex;
+        }
+
+        saveGameState();
     }
 
     function saveGameState() {
@@ -328,7 +362,7 @@
       security = 100;
       morale = 100;
       currentScenarioIndex = 0;
-      scenarioOrder = shuffle([...Array(scenarios.length).keys()]);
+      scenarioOrder = shuffle([...Array(scenarios.length).keys()]).slice(0, scenariosPerRun);
       completedScenarios = [];
     }
 
@@ -450,7 +484,11 @@
         const button = document.createElement("button");
         button.textContent = choice.text;
         button.onclick = () => {
-          const effects = choice.getEffects({ budget, reputation, security, morale });
+          const currentState = { budget, reputation, security, morale };
+
+          const effects = choice.getEffects(currentState);
+          const outcomeText = choice.getOutcome(currentState);
+
           updateScores(effects);
           if (budget <= 0) return;
 
@@ -459,7 +497,7 @@
             decisionLog.push({
             scenario: scenario.text,
             choice: choice.text,
-            outcome: choice.getOutcome(),
+            outcome: outcomeText,
             effects: effects,
             timestamp: new Date().toISOString()
           });
@@ -476,7 +514,6 @@
             localStorage.setItem("resultsPending", "1"); // results exist, but user hasn’t viewed them yet
           }
 
-          const outcomeText = choice.getOutcome();
           choicesDiv.innerHTML = "";
           // change the button text of the final choice to "Next Scenario" or "View Results" if it was the last one
           document.getElementById("outcome-text").innerHTML = `<strong>You chose:</strong> ${choice.text}<br><br>${outcomeText}`;

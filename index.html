@@ -487,14 +487,11 @@
 
   </div>
 
+  <script src="scenario-bank.js"></script>
 
   <script>
-  const TOTAL_SCENARIOS = 5;
+  const TOTAL_SCENARIOS = scenariosPerRun;
   const MAX_VALUE = 200;
-
-  //function formatCurrency(value) {
-    //return "£" + value.toLocaleString('en-GB');
-  //}
 
   function getBudgetCommentary(budget) {
     if (budget >= 500000) return "Excellent budget — strong financial backing.";
