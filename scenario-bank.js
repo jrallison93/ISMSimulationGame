@@ -2,7 +2,7 @@
     const scenarios = [
       {
       text: "You have recently joined IT Services at the University of Gloucestershire as a graduate cyber security analyst. During a routine review of mail gateway logs, you notice a sudden spike in phishing emails sent to academic and professional services staff. The messages appear to come from IT Support and direct users to a fake Microsoft 365 login page. Several staff have already clicked the link, and one department reports unusual login prompts. Your manager is in a meeting, so you must recommend an immediate response before more accounts are compromised",
-      /*image:*/
+      image: "https://raw.githubusercontent.com/jrallison93/ISMSimulationGame/586eadf0a3402a7b07d33eda539f002069a762ae/scenario-images/Scenario%20-%2001.jpg",
       choices: [
           {
             text: "Immediate University-Wide Warning",
@@ -30,7 +30,7 @@
       
       {
       text: "A scheduled vulnerability scan identifies a critical flaw in a legacy student records application used by Registry and Student Services. The system stores student names, IDs, contact details, and course information. No confirmed breach has been detected, but the software is externally reachable and the vendor patch has not yet been tested internally. Taking it offline would disrupt enrolment and records work during a busy period.",
-      /*image:*/
+      image: "https://raw.githubusercontent.com/jrallison93/ISMSimulationGame/586eadf0a3402a7b07d33eda539f002069a762ae/scenario-images/Scenario%20-%2002.jpg",
       choices: [
           {
             text: "Take the System Offline Immediately",
@@ -57,7 +57,7 @@
 
       {
       text: "While reviewing access logs for a coursework submission platform, you discover that several staff in one school have been sharing a single administrative password. The department argues this is the only practical way to manage urgent deadlines and student extensions. However, shared credentials mean actions cannot be traced to individuals and create a serious accountability problem.",
-      /*image:*/
+      image: "https://raw.githubusercontent.com/jrallison93/ISMSimulationGame/586eadf0a3402a7b07d33eda539f002069a762ae/scenario-images/Scenario%20-%2003.jpg",
       choices: [
           {
             text: "Enforce Individual Accounts",
@@ -79,7 +79,7 @@
 
       {
       text: "The IT helpdesk reports that multiple machines in a campus computer lab are showing suspicious pop-ups and attempting to connect to known malicious domains. The lab is heavily used for teaching and assignment submission. Some students have files open on shared machines, and teaching staff are worried about disruption to scheduled sessions later that day.",
-      /*image:*/
+      image: "https://raw.githubusercontent.com/jrallison93/ISMSimulationGame/586eadf0a3402a7b07d33eda539f002069a762ae/scenario-images/Scenario%20-%2004.jpg",
       choices: [
           {
             text: "Shut Down the Lab Immediately",
@@ -106,7 +106,7 @@
 
       {
       text: "A monitoring alert shows that a member of staff has exported an unusually large volume of student data from a university system outside normal working hours. The account has legitimate access, but the pattern is unusual. The line manager says the staff member has been under pressure recently and may simply be working from home. You need to advise on the next step.",
-      /*image:*/
+      image: "https://raw.githubusercontent.com/jrallison93/ISMSimulationGame/586eadf0a3402a7b07d33eda539f002069a762ae/scenario-images/Scenario%20-%2005.jpg",
       choices: [
           {
             text: "Immediate Formal Investigation",
@@ -133,7 +133,7 @@
       
       {
       text: "Several shared drives used by academic departments become inaccessible, and users see ransom notes demanding payment in cryptocurrency. Some restored files appear corrupted. Teaching materials and administrative documents are affected, and senior leadership wants services back quickly. There is pressure to minimise disruption before students begin submitting coursework.",
-      /*image:*/
+      image: "https://raw.githubusercontent.com/jrallison93/ISMSimulationGame/586eadf0a3402a7b07d33eda539f002069a762ae/scenario-images/Scenario%20-%2006.jpg",
       choices: [
           {
             text: "Refuse Payment and Restore from Backups",
@@ -160,7 +160,7 @@
 
       {
       text: "The university has expanded remote learning and hybrid working, but the current setup relies on basic remote access controls. Some staff are using personal devices, and there have been reports of weak home network security. Leadership wants a practical solution that improves security without causing major complaints from staff and students.",
-      /*image:*/
+      image: "https://raw.githubusercontent.com/jrallison93/ISMSimulationGame/586eadf0a3402a7b07d33eda539f002069a762ae/scenario-images/Scenario%20-%2007.jpg",
       choices: [
           {
             text: "Secure Remote Work Upgrade",
@@ -182,7 +182,7 @@
       
       {
       text: "A school wants to adopt a new cloud-based learning tool before the next teaching block. The supplier promises better student engagement, but the platform has a limited security track record and stores data outside the UK. Academic staff are pushing for a quick approval, while Legal and IT Services want due diligence before rollout.",
-      /*image:*/    
+      image: "https://raw.githubusercontent.com/jrallison93/ISMSimulationGame/586eadf0a3402a7b07d33eda539f002069a762ae/scenario-images/Scenario%20-%2008.jpg",    
       choices: [
           {
             text: "Full Security Assessment Before Approval",
@@ -209,7 +209,7 @@
 
       {
       text: "An old on-premises server used by the Development and Alumni team stores contact data, donor histories, and communication preferences. The server is increasingly unstable and no longer supported by the vendor. A replacement project is planned, but not yet funded. You are asked how to reduce risk now.",
-      /*image:*/
+      image: "https://raw.githubusercontent.com/jrallison93/ISMSimulationGame/586eadf0a3402a7b07d33eda539f002069a762ae/scenario-images/Scenario%20-%2009.jpg",
       choices: [
           {
             text: "Replace the Server Now",
@@ -236,7 +236,7 @@
 
       {
       text: "A research centre is storing sensitive project data in shared folders that are accessible to a wider group of staff and postgraduate researchers than intended. The principal investigator wants collaboration to remain easy, but the current permissions mean confidential data could be viewed or altered by people who do not need access.",
-      /*image:*/
+      image: "https://raw.githubusercontent.com/jrallison93/ISMSimulationGame/586eadf0a3402a7b07d33eda539f002069a762ae/scenario-images/Scenario%20-%2010.jpg",
       choices: [
           {
             text: "Restrict Access Strictly",
@@ -258,7 +258,7 @@
 
       {
       text: "A recent cyber incident affecting an internal university service has been contained, but remediation costs were significant and there is a risk of reputational fallout if details emerge later. Ahead of the next meeting with governors and major funders, senior leadership must decide how much to communicate. Some argue for full transparency, while others want to avoid alarming stakeholders.",
-      /*image:*/
+      image: "https://raw.githubusercontent.com/jrallison93/ISMSimulationGame/586eadf0a3402a7b07d33eda539f002069a762ae/scenario-images/Scenario%20-%2011.jpg",
       choices: [
           {
             text: "Full Transparent Disclosure",
@@ -285,7 +285,7 @@
 
       {
       text: "Recent phishing simulations show weak staff awareness in several departments. IT Services has proposed a refreshed training programme with short interactive modules and role-specific content. Finance is pushing for lower spend, and some managers think optional guidance is enough. You are asked to recommend an approach for the next academic year.",
-      /*image:*/
+      image: "https://raw.githubusercontent.com/jrallison93/ISMSimulationGame/586eadf0a3402a7b07d33eda539f002069a762ae/scenario-images/Scenario%20-%2012.jpg",
       choices: [
           {
             text: "Mandatory Role-Based Training",
@@ -307,7 +307,7 @@
 
       {
       text: "Following concerns about productivity in hybrid working, a senior manager proposes deploying employee monitoring software to track login time, device activity, and application use. HR is concerned about trust and privacy, while some leaders believe the software would improve accountability. You are asked for a security and governance recommendation.",
-      /*image:*/
+      image: "https://raw.githubusercontent.com/jrallison93/ISMSimulationGame/586eadf0a3402a7b07d33eda539f002069a762ae/scenario-images/Scenario%20-%2013.jpg",
       choices: [
           {
             text: "Full Monitoring Deployment",
@@ -329,7 +329,7 @@
 
       {
       text: "An internal review finds that one area of campus still relies on weaker Wi-Fi authentication settings for compatibility with older devices. The current setup is convenient, but it increases the risk of unauthorised access and credential misuse. Updating the system would require device re-enrolment and additional support time.",
-      /*image:*/
+      image: "https://raw.githubusercontent.com/jrallison93/ISMSimulationGame/586eadf0a3402a7b07d33eda539f002069a762ae/scenario-images/Scenario%20-%2014.jpg",
       choices: [
           {
             text: "Full Authentication Upgrade",
@@ -356,7 +356,7 @@
 
       {
       text: "The university is considering whether to move more data storage to a third-party cloud provider, retain a strengthened on-premises environment, or adopt a hybrid approach. Cloud migration could improve resilience and scalability, but there are concerns around control, cost, and the handling of sensitive data.",
-      /*image:*/
+      image: "https://raw.githubusercontent.com/jrallison93/ISMSimulationGame/586eadf0a3402a7b07d33eda539f002069a762ae/scenario-images/Scenario%20-%2015.jpg",
       choices: [
           {
             text: "Move to Third-Party Cloud",
