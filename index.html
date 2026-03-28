@@ -617,17 +617,22 @@ updateDonut("morale-ring", "morale-value", state.morale, "morale-comment");
 
     const completedCount = Array.isArray(state.completedScenarios) ? state.completedScenarios.length : 0;
     const resultsPending = localStorage.getItem("resultsPending") === "1";
+    const budgetExhausted = state.budget <= 0;
 
     const resetBtn = document.getElementById("reset-btn");
-    if (completedCount >= TOTAL_SCENARIOS && !resultsPending) {
-      resetBtn.disabled = false;
-      resetBtn.title = "";
-    } else {
-      resetBtn.disabled = true;
-      resetBtn.title = resultsPending
-        ? "Please view results before resetting"
-        : "Reset is available after you complete all scenarios";
-  }
+      if (budgetExhausted) {
+        resetBtn.disabled = false;
+        resetBtn.title = "";
+      }
+      else if (completedCount >= TOTAL_SCENARIOS && !resultsPending) {
+        resetBtn.disabled = false;
+        resetBtn.title = "";
+      } else {
+        resetBtn.disabled = true;
+        resetBtn.title = resultsPending
+          ? "Please view results before resetting"
+          : "Reset is available after you complete all scenarios";
+     }
 
     const progressText = `${completedCount} of ${TOTAL_SCENARIOS} scenarios completed.`;
     document.getElementById("progress-text").textContent = completedCount > 0 ? progressText : "You haven't started the game yet.";
@@ -637,22 +642,26 @@ updateDonut("morale-ring", "morale-value", state.morale, "morale-comment");
 
     const startBtn = document.getElementById("start-btn");
    
-    if (completedCount >= TOTAL_SCENARIOS && resultsPending) {
-     startBtn.disabled = false;
-     startBtn.textContent = "View Results";
-   }
+    if (budgetExhausted) {
+      startBtn.disabled = true;
+      startBtn.textContent = "Out of Budget";
+    }
+    else if (completedCount >= TOTAL_SCENARIOS && resultsPending) {
+      startBtn.disabled = false;
+      startBtn.textContent = "View Results";
+    }
     else if (completedCount >= TOTAL_SCENARIOS) {
-     startBtn.disabled = true;
-     startBtn.textContent = "All Scenarios Completed";
-   }
+      startBtn.disabled = true;
+      startBtn.textContent = "All Scenarios Completed"; 
+    }
     else if (completedCount > 0) {
-     startBtn.disabled = false;
-     startBtn.textContent = "Continue Scenario";
-   }
-   else {
-     startBtn.disabled = false;
-     startBtn.textContent = "Start Scenario";
-   }
+      startBtn.disabled = false;
+      startBtn.textContent = "Continue Scenario";
+    }
+    else {
+      startBtn.disabled = false;
+      startBtn.textContent = "Start Scenario";
+    }
 
     const happiness = calculateBoardHappiness(state);
     document.getElementById("board-happiness-value").textContent = `${happiness}%`;
@@ -666,16 +675,17 @@ updateDonut("morale-ring", "morale-value", state.morale, "morale-comment");
 
     const state = loadGameState();
     const completedCount = Array.isArray(state.completedScenarios) ? state.completedScenarios.length : 0;
+    const budgetExhausted = state.budget <= 0;
 
     if (localStorage.getItem("resultsPending") === "1") {
     alert("Please view results before resetting the game.");
     return;
   }
     // prevent reset button if someone tries to reset from the console before completing all scenarios
-    if (completedCount < TOTAL_SCENARIOS) {
+    if (completedCount < TOTAL_SCENARIOS && !budgetExhausted) {
     alert("You can reset the game after completing all scenarios");
     return;
-    }
+  }
     localStorage.removeItem("finalScores");
     localStorage.removeItem("resultsPending");
     localStorage.removeItem("decisionLogSentAt");

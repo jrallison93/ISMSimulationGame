@@ -217,11 +217,42 @@
       justify-content: center;
       gap: 0.8rem;
     }
+    .button-row.game-over-buttons {
+      gap: 0.8rem;
+    }
+    .button-row.game-over-buttons #restart-btn,
+    .button-row.game-over-buttons #log-btn {
+      width: 240px;
+      max-width: 240px;
+      flex: 0 0 240px;
+    }
     .primary-buttons {
       margin-top: 1rem;
     }
     .secondary-buttons {
       margin-top: 0.8rem;
+    }
+    .game-over-box {
+      max-width: 650px;
+      margin: 0 auto;
+      background: #fff4f4;
+      border: 1px solid #f1c0c0;
+      border-left: 6px solid #dc3545;
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      text-align: left;
+    }
+
+    .game-over-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #b02a37;
+      margin-bottom: 0.6rem;
+    }
+
+    .game-over-message {
+      line-height: 1.7;
+      color: #333;
     }
     /* Mobile: stack the main buttons */
     @media (max-width: 600px) {
@@ -410,7 +441,7 @@
       saveGameState();
 
       if (budget <= 0) {
-        endGame("Bankruptcy! Your company has run out of budget and cannot continue operations.");
+        endGame("You have exceeded the available budget and can no longer continue in the role. Restart the game to try again.");
       }
     }
 
@@ -430,7 +461,10 @@
     }
 
     function showScenario(index) {
-      if (budget <= 0) return;
+      if (budget <= 0){
+         endGame("You have exceeded the available budget and can no longer continue in the role. Restart the game to try again.");
+         return;
+      } 
 
       if (index >= scenarioOrder.length) {
 
@@ -461,6 +495,7 @@
       document.getElementById("outcome-text").textContent = "";
       document.getElementById("next-btn").style.display = "none";
       document.getElementById("log-btn").style.display = "none";
+      document.querySelector(".primary-buttons").classList.remove("game-over-buttons");
       document.getElementById("next-btn").textContent = "Next Scenario";
       document.getElementById("home-btn").style.display = "inline-block";
 
@@ -488,20 +523,29 @@
 
           const effects = choice.getEffects(currentState);
           const outcomeText = choice.getOutcome(currentState);
+          const willBudgetExhaust = budget + (effects.budget || 0) <= 0;
+
+          const loggedOutcomeText = willBudgetExhaust
+              ? `${outcomeText}<div class="budget-failure-note">GAME OVER: Out of Budget</div>`
+              : outcomeText;
 
           updateScores(effects);
-          if (budget <= 0) return;
 
           // Log the decision
           const decisionLog = JSON.parse(localStorage.getItem('decisionLog') || '[]');
             decisionLog.push({
             scenario: scenario.text,
             choice: choice.text,
-            outcome: outcomeText,
+            outcome: loggedOutcomeText,
             effects: effects,
             timestamp: new Date().toISOString()
           });
           localStorage.setItem('decisionLog', JSON.stringify(decisionLog));
+
+           if (budget <= 0) {
+            sendDecisionLogOnBudgetFailure();
+            return;
+          }
 
           if (!completedScenarios.includes(scenarioIdx)) {
             completedScenarios.push(scenarioIdx);
@@ -561,19 +605,41 @@
     }
 
     function endGame(message) {
-      document.getElementById("scenario-text").innerHTML = `<strong>Game Over:</strong> ${message}`;
+     const imageBox = document.getElementById("scenario-image-box");
+      imageBox.style.display = "none";
+      imageBox.innerHTML = "";
+      document.getElementById("scenario-text").innerHTML = `
+      <div class="game-over-box">
+      <div class="game-over-title">Out of Budget</div>
+      <div class="game-over-message">${message}</div>
+      </div>
+    `;
+
       document.getElementById("choices").innerHTML = "";
       document.getElementById("outcome-text").textContent = "";
       document.getElementById("next-btn").style.display = "none";
-      document.getElementById("restart-btn").style.display = "block";
+
+      const restartBtn = document.getElementById("restart-btn");
+      const logBtn = document.getElementById("log-btn");
+      const primaryButtons = document.querySelector(".primary-buttons");
+
+      restartBtn.style.display = "inline-block";
+      logBtn.style.display = "inline-block";
+      primaryButtons.classList.add("game-over-buttons");
+
+      document.getElementById("home-btn").style.display = "none";
+      document.getElementById("about-btn").style.display = "none";
     }
 
     function restartGame() {
       localStorage.removeItem("ismGameState");
       localStorage.removeItem("resultsPending");
-      resetGameState();
-      saveGameState();
-      initialiseGame();
+      localStorage.removeItem("finalScores");
+      localStorage.removeItem("introSeen");
+      localStorage.removeItem("decisionLog");
+      localStorage.removeItem("decisionLogSentAt");
+      localStorage.removeItem("decisionLogRunId");
+      window.location.href = "index.html";
     }
 
     function goHome() {
@@ -587,6 +653,46 @@
     function goToAbout() {
       window.location.href = "about.html";
     }
+
+    const DECISION_LOG_EMAIL_ENDPOINT = "https://script.google.com/macros/s/AKfycbweyyfcAmjnxd7g9YsTmhRA-HPezmyG0dIhkZEIeItRcsgUSsuk6chgcVuzPWBygIzW/exec";
+    const DECISION_LOG_SECRET = "CyberSecSim!log#2026";
+
+    function generateRunId() {
+      return "run_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+    }
+
+    function sendDecisionLogOnBudgetFailure() {
+    const alreadySentAt = localStorage.getItem("decisionLogSentAt");
+      if (alreadySentAt) return;
+
+    const decisionLog = JSON.parse(localStorage.getItem("decisionLog") || "[]");
+      if (!decisionLog.length) return;
+
+    const runId = localStorage.getItem("decisionLogRunId") || generateRunId();
+      localStorage.setItem("decisionLogRunId", runId);
+
+    const payload = {
+      secret: DECISION_LOG_SECRET,
+      sent_at: new Date().toISOString(),
+      run_id: runId,
+      failure_type: "budget_exhausted",
+      finalScores: { budget, reputation, security, morale },
+      decisionLog: decisionLog
+    };
+
+    fetch(DECISION_LOG_EMAIL_ENDPOINT, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    })
+    .then(() => {
+      localStorage.setItem("decisionLogSentAt", new Date().toISOString());
+    })
+    .catch(() => {
+      console.log("Could not submit decision log on budget failure.");
+    });
+  }
 
     initialiseGame();
   </script>

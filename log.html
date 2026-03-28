@@ -51,6 +51,18 @@
       margin-bottom: 0.5rem;
     }
 
+    .budget-failure-note {
+      margin-top: 0.7rem;
+      padding: 0.55rem 0.75rem;
+      background: #fff1f1;
+      border-left: 4px solid #dc3545;
+      border-radius: 6px;
+      color: #b02a37;
+      font-weight: bold;
+      font-size: 1rem;
+      font-style: normal;
+    }
+
     .effects {
       background: #f8fbff;
       border: 1px solid #e6eefc;
@@ -147,6 +159,12 @@
       window.location.href = "index.html";
     }
 
+    function stripHtmlForPdf(html) {
+      const temp = document.createElement("div");
+      temp.innerHTML = html;
+      return temp.textContent || temp.innerText || "";
+    }
+
     function renderLog() {
       const logContainer = document.getElementById('log-container');
       const decisionLog = JSON.parse(localStorage.getItem('decisionLog') || '[]');
@@ -166,7 +184,7 @@
           <div class="timestamp">🕒 ${new Date(entry.timestamp).toLocaleString()}</div>
           <div class="scenario">Scenario: ${entry.scenario}</div>
           <div class="choice">Your Choice: ${entry.choice}</div>
-          <div class="outcome">Outcome: ${entry.outcome}</div>
+          <div class="outcome"><strong>Outcome:</strong> ${entry.outcome}</div>
           <pre class="effects">${formatEffects(entry.effects)}</pre>
         `;
 
@@ -200,7 +218,7 @@
           `Time: ${timestamp}`,
           `Scenario: ${entry.scenario}`,
           `Choice: ${entry.choice}`,
-          `Outcome: ${entry.outcome}`,
+          `Outcome: ${stripHtmlForPdf(entry.outcome)}`,
           `Effects: ${formatEffects(entry.effects)}`,
           " "
         ];
