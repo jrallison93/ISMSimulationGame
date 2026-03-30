@@ -56,15 +56,16 @@
     #scenario-text { /* long scenario text to paragraph style */
       max-width: 65ch;      
       margin: 0 auto 1.5rem auto; 
-      text-align: justify; 
-      text-justify: inter-word;   
+      text-align: left;   
       line-height: 1.75;
+      white-space: pre-line;
     }
+    
     .choices button {
       display: block;
       width: 100%;
       margin-bottom: 1rem;
-      padding: 1rem 1.1rem;
+      padding: 1.15rem 1.1rem;
       border: 1px solid #e6eefc; 
       border-radius: 10px;
       border-left: 6px solid #007bff;
@@ -75,16 +76,43 @@
       text-align: left;
       transition: background-color 0.2s ease, transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
+
     .choices button:hover {
       background: #eef6ff;
       transform: translateY(-1px);
       border-color: rgba(0,123,255,0.35);
       box-shadow: 0 10px 18px rgba(0,0,0,0.08);
     }
+
     .choices button:active {
       transform: translateY(0);
       box-shadow: none;
     }
+
+    .choice-title {
+      display: block;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 0.35rem;
+    }
+
+    .choice-details {
+      display: block;
+      font-size: 0.98rem;
+      line-height: 1.5;
+      color: #333;
+      margin-bottom: 0.35rem;
+    }
+
+    .choice-cost {
+      display: block;
+      font-size: 0.92rem;
+      font-style: italic;
+      color: #666;
+      margin-top: 0.15rem;
+    }
+    
     .scores {
       margin-top: 1.2rem;
       margin-bottom: 1.5rem;
@@ -93,6 +121,7 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 0.8rem;
     }
+
     .score-card {
       background: #f8fbff;
       border: 1px solid #e6eefc;
@@ -101,18 +130,21 @@
       text-align: center;
       box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
+
     .score-label {
       font-size: 0.9rem;
       font-weight: bold;
       color: #555;
       margin-bottom: 0.4rem;
     }
+
     .score-value {
       font-size: 1.15rem;
       font-weight: bold;
       color: #111;
       margin-bottom: 0.25rem;
     }
+
     .scenario-image-box {
       width: 100%;
       margin: 1.2rem 0 1.5rem 0;
@@ -122,6 +154,7 @@
       border: none;
       padding: 0;
     }
+
     .scenario-image-box img {
       max-width: 640px;
       max-height: 300px;
@@ -130,33 +163,41 @@
       display: block;
       border-radius: 12px;
     }
+
     .score-change {
       display: block;
       font-size: 0.85rem;
       margin-top: 0.25rem;
     }
+
     .score-change.positive {
       color: green;
     }
+
     .score-change.negative {
       color: red;
     }
+
     .outcome {
       margin-top: 1rem;
-      line-height: 1.55;
+      line-height: 1.65;
       font-style: normal;
       color: #333;
     }
+
     .outcome:not(:empty) {
       background: #f7f2ff;              
-      border-left: 3px solid #6f42c1;
-      padding: 0.6rem 0.8rem;
-      border-radius: 6px;
+      border-left: 4px solid #6f42c1;
+      padding: 0.9rem 1rem;
+      border-radius: 10px;
+      margin-top: 1.2rem;
       margin-bottom: 0.8rem;
     }
+
     .outcome strong {
       color: #111;
     }
+
     #next-btn, #restart-btn, #home-btn, #log-btn, #about-btn {
       width: 220px;
       padding: 0.85rem 1rem;
@@ -168,70 +209,87 @@
       display: none;
       white-space: nowrap;
     }
+
     #next-btn {
       background: #28a745;
       margin-top: 1.2rem;
       margin-bottom: 1.2rem;
     }
+
     #next-btn:hover { 
       background: #218838; 
     }
+
     #next-btn.final-btn {
       margin-top: 1.2rem;
       margin-bottom: 1.2rem;
     }
+
     #restart-btn {
       background: #dc3545;
     }
+
     #restart-btn:hover { 
       background: #c82333; 
     }
+
     #log-btn {
       background: #007bff;
       margin-top: 1.2rem;
       margin-bottom: 1.2rem;
     }
+
     #log-btn:hover {
       background: #0056b3;
     }
+
     #about-btn {
       background: #17a2b8;
       display: inline-block;
       margin-top: 1.2rem;
       margin-bottom: 1.2rem;
     }
+
     #about-btn:hover {
       background: #117a8b;
     }
+
     #home-btn {
       background: #6c757d;
       display: inline-block;
       margin-top: 1.2rem;
       margin-bottom: 1.2rem;
     }
+
     #home-btn:hover {
       background: #5a6268;
     }
+
     .button-row {
       display: flex;
       justify-content: center;
       gap: 0.8rem;
     }
+
     .button-row.game-over-buttons {
       gap: 0.8rem;
     }
+
     .button-row.game-over-buttons #restart-btn,
     .button-row.game-over-buttons #log-btn {
       width: 240px;
       max-width: 240px;
       flex: 0 0 240px;
     }
+
     .primary-buttons {
       margin-top: 1rem;
     }
+
     .secondary-buttons {
       margin-top: 0.8rem;
     }
+
     .game-over-box {
       max-width: 650px;
       margin: 0 auto;
@@ -517,12 +575,21 @@
 
       scenario.choices.forEach((choice) => {
         const button = document.createElement("button");
-        button.textContent = choice.text;
+        button.innerHTML = `
+          <span class="choice-title">${choice.title}</span>
+          <span class="choice-details">${choice.details}</span>
+          <span class="choice-cost">Estimated cost: ${choice.estimatedCost}</span>
+        `;
         button.onclick = () => {
           const currentState = { budget, reputation, security, morale };
 
           const effects = choice.getEffects(currentState);
-          const outcomeText = choice.getOutcome(currentState);
+          const results = choice.getResults(currentState);
+          const outcomeText =
+          `<strong>Security:</strong> ${results.security}<br><br>` +
+          `<strong>Reputation:</strong> ${results.reputation}<br><br>` +
+          `<strong>Budget:</strong> ${results.budget}<br><br>` +
+          `<strong>Staff Morale:</strong> ${results.morale}`;
           const willBudgetExhaust = budget + (effects.budget || 0) <= 0;
 
           const loggedOutcomeText = willBudgetExhaust
@@ -535,7 +602,7 @@
           const decisionLog = JSON.parse(localStorage.getItem('decisionLog') || '[]');
             decisionLog.push({
             scenario: scenario.text,
-            choice: choice.text,
+            choice: choice.title,
             outcome: loggedOutcomeText,
             effects: effects,
             timestamp: new Date().toISOString()
@@ -560,7 +627,7 @@
 
           choicesDiv.innerHTML = "";
           // change the button text of the final choice to "Next Scenario" or "View Results" if it was the last one
-          document.getElementById("outcome-text").innerHTML = `<strong>You chose:</strong> ${choice.text}<br><br>${outcomeText}`;
+          document.getElementById("outcome-text").innerHTML = `<strong>You chose:</strong><br>${choice.title}<br><br>${outcomeText}`;
 
           const nextBtn = document.getElementById("next-btn");
           const homeBtn = document.getElementById("home-btn");
