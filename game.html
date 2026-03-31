@@ -298,7 +298,6 @@
       border-left: 6px solid #dc3545;
       border-radius: 10px;
       padding: 1rem 1.2rem;
-      text-align: left;
     }
 
     .game-over-title {
@@ -375,6 +374,7 @@
     <div class="scenario" id="scenario-text"></div>
     <div class="choices" id="choices"></div>
     <div class="outcome" id="outcome-text"></div>
+    <div id="game-over-notice"></div>
 
  <div class="button-row primary-buttons">
   <button id="next-btn" onclick="goToNextScenario()">Next Scenario</button>
@@ -498,9 +498,7 @@
       updateScoreDisplay();
       saveGameState();
 
-      if (budget <= 0) {
-        endGame("You have exceeded the available budget and can no longer continue in the role. Restart the game to try again.");
-      }
+      
     }
 
     function updateScoreDisplay() {
@@ -551,6 +549,7 @@
       const imageBox = document.getElementById("scenario-image-box"); // get the image box element
 
       document.getElementById("outcome-text").textContent = "";
+      document.getElementById("game-over-notice").innerHTML = "";
       document.getElementById("next-btn").style.display = "none";
       document.getElementById("log-btn").style.display = "none";
       document.querySelector(".primary-buttons").classList.remove("game-over-buttons");
@@ -609,10 +608,18 @@
           });
           localStorage.setItem('decisionLog', JSON.stringify(decisionLog));
 
-           if (budget <= 0) {
-            sendDecisionLogOnBudgetFailure();
-            return;
-          }
+          if (budget <= 0) {
+            const lastOutcomeHtml = `
+              <div class="outcome">
+              <strong>You chose:</strong><br>${choice.title}<br><br>${outcomeText}
+            </div>
+          `;
+
+          document.getElementById("outcome-text").innerHTML = "";
+          sendDecisionLogOnBudgetFailure();
+          endGame("You have exceeded the available budget and can no longer continue in the role. Restart the game to try again.", lastOutcomeHtml);
+          return;
+        }
 
           if (!completedScenarios.includes(scenarioIdx)) {
             completedScenarios.push(scenarioIdx);
@@ -671,19 +678,19 @@
       showScenario(currentScenarioIndex);
     }
 
-    function endGame(message) {
+    function endGame(message, lastOutcomeHtml = "") {
      const imageBox = document.getElementById("scenario-image-box");
       imageBox.style.display = "none";
       imageBox.innerHTML = "";
-      document.getElementById("scenario-text").innerHTML = `
-      <div class="game-over-box">
-      <div class="game-over-title">Out of Budget</div>
-      <div class="game-over-message">${message}</div>
-      </div>
-    `;
+      document.getElementById("game-over-notice").innerHTML = `
+        ${lastOutcomeHtml}
+        <div class="game-over-box">
+        <div class="game-over-title">Game Over — Out of Budget</div>
+        <div class="game-over-message">${message}</div>
+        </div>
+      `;
 
       document.getElementById("choices").innerHTML = "";
-      document.getElementById("outcome-text").textContent = "";
       document.getElementById("next-btn").style.display = "none";
 
       const restartBtn = document.getElementById("restart-btn");
