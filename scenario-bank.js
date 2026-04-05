@@ -31,7 +31,7 @@
           {
             title: "Block and Monitor Without Warning",
             details: "Block the sender domain and monitor for further activity without immediately informing staff.",
-            estimatedCost: "Very Low - High",       
+            estimatedCost: "Very Low",       
             getEffects: ({ security }) => security >= 110
             ? { budget: -5000, reputation: -4, security: -2, morale: -4 }
             : { budget: -42000, reputation: -16, security: -10, morale: -8 },
@@ -72,7 +72,7 @@
           {
             title: "Monitor and Delay Action",
             details: "Leave the system running and monitor it while planning a future upgrade.",
-            estimatedCost: "Low - Very High",
+            estimatedCost: "Low",
             getEffects: ({ security }) => security >= 115
             ? { budget: -10000, reputation: -6, security: -4, morale: -3 }
             : { budget: -85000, reputation: -20, security: -16, morale: -9 },
@@ -180,7 +180,7 @@
           { 
             title: "Keep the Lab Open and Monitor",
             details: "Keep the lab open to avoid disruption and monitor for further malicious activity.",
-            estimatedCost: "Very Low - High",
+            estimatedCost: "Very Low",
             getEffects: ({ security }) => security >= 115
             ? { budget: -7000, reputation: -5, security: -6, morale: -3 }
             : { budget: -65000, reputation: -18, security: -18, morale: -10 },
@@ -233,7 +233,7 @@
           {
             title: "Supportive Manager-Led Check-In",
             details: "Ask the line manager to hold a welfare and policy discussion while access is reviewed.",
-            estimatedCost: "Low - Medium",
+            estimatedCost: "Low",
             getEffects: ({ security }) => security >= 108
             ? { budget: -12000, reputation: +2, security: +2, morale: +6 }
             : { budget: -35000, reputation: -8, security: -6, morale: +2 },
@@ -274,7 +274,7 @@
           {
             title: "Negotiate While Recovering",
             details: "Open communication with the attacker while beginning technical recovery and containment.",
-            estimatedCost: "High – Very High",
+            estimatedCost: "High",
             getEffects: ({ reputation }) => reputation >= 110
             ? { budget: -70000, reputation: -4, security: +4, morale: -4 }
             : { budget: -120000, reputation: -18, security: 0, morale: -10 },
@@ -382,7 +382,7 @@
           {
             title: "Approve with Minimal Review",
             details: "Approve quickly with only a light review to meet teaching timelines.",
-            estimatedCost: "Negligible - High",
+            estimatedCost: "Negligible",
             getEffects: ({ security }) => security >= 110
             ? { budget: +20000, reputation: -3, security: -4, morale: -2 }
             : { budget: -45000, reputation: -14, security: -12, morale: -7 },
@@ -423,7 +423,7 @@
           {
             title: "Leave It in Place",
             details: "Keep the server unchanged until the future replacement project begins.",
-            estimatedCost: "Very Low - High",
+            estimatedCost: "Low",
             getEffects: ({ security }) => security >= 112
             ? { budget: -5000, reputation: -5, security: -4, morale: -2 }
             : { budget: -60000, reputation: -18, security: -14, morale: -8 },
@@ -519,7 +519,7 @@
           {
             title: "Non-Disclosure",
             details: "Do not raise the incident unless directly asked, prioritising short-term stability.",
-            estimatedCost: "Negligible - High",
+            estimatedCost: "Negligible",
             getEffects: ({ reputation }) => reputation >= 115
             ? { budget: -4000, reputation: -8, security: 0, morale: -8 }
             : { budget: -50000, reputation: -24, security: -4, morale: -15 },
@@ -671,7 +671,7 @@
           {
             title: "Leave Current Setup",
             details: "Keep the existing weaker authentication settings for compatibility and convenience.",
-            estimatedCost: "Negligible - Medium",
+            estimatedCost: "Negligible",
             getEffects: ({ security }) => security >= 112
             ? { budget: 0, reputation: -4, security: -4, morale: -1 }
             : { budget: -35000, reputation: -14, security: -12, morale: -6 },
