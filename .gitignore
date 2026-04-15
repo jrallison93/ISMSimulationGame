@@ -16,6 +16,9 @@ Thumbs.db
 Analysis/Data/Raw/
 Analysis/Data/Cleaned/
 
+# Ignore analysis output tables
+Analysis/Outputs/tables/
+
 # Ignore Excel and CSV files inside Analysis
 Analysis/**/*.xlsx
 Analysis/**/*.xls
