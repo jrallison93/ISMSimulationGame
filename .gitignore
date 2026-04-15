@@ -1,0 +1,26 @@
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter checkpoint files
+.ipynb_checkpoints/
+
+# VS Code and system files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Ignore raw and cleaned analysis data folders
+Analysis/Data/Raw/
+Analysis/Data/Cleaned/
+
+# Ignore Excel and CSV files inside Analysis
+Analysis/**/*.xlsx
+Analysis/**/*.xls
+Analysis/**/*.csv
+
+# Ignore temporary Excel files
+~$*.xlsx
+~$*.xls
