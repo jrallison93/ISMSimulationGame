@@ -12,12 +12,19 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# Ignore raw and cleaned analysis data folders
+# Ignore survey/raw cleaned analysis data folders
 Analysis/Data/Raw/
 Analysis/Data/Cleaned/
 
+# Ignore decision log data folders
+Analysis/Data/Decision_Logs/Raw/
+Analysis/Data/Decision_Logs/Interim/
+Analysis/Data/Decision_Logs/Cleaned/
+
 # Ignore analysis output tables
 Analysis/Outputs/tables/
+Analysis/Outputs/Decision_Logs/tables/
+Analysis/Outputs/Decision_Logs/figures/
 
 # Ignore Excel and CSV files inside Analysis
 Analysis/**/*.xlsx
